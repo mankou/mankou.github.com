@@ -191,8 +191,17 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-12 17:55:25" itemprop="dateModified" datetime="2020-10-12T17:55:25+08:00">2020-10-12</time>
+                <time title="Modified: 2020-10-19 11:38:43" itemprop="dateModified" datetime="2020-10-19T11:38:43+08:00">2020-10-19</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
 
           
 
@@ -213,7 +222,7 @@
 
 
 <p>具体代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 演示最简单的使用方式</span></span><br><span class="line"><span class="comment">        * 这里默认的替换符就是$&#123;&#125;</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        params.put(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        params.put(<span class="string">&quot;captcha&quot;</span>, <span class="string">&quot;111111&quot;</span>);</span><br><span class="line">        StringSubstitutor stringSubstitutor=<span class="keyword">new</span> StringSubstitutor(params);</span><br><span class="line">        String template = <span class="string">&quot;$&#123;userName&#125; 欢迎使用,您的验证码是$&#123;captcha&#125;&quot;</span>;</span><br><span class="line">        String result=stringSubstitutor.replace(template);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 演示最简单的使用方式</span></span><br><span class="line"><span class="comment">        * 这里默认的替换符就是$&#123;&#125;</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        params.put(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        params.put(<span class="string">&quot;captcha&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        StringSubstitutor stringSubstitutor=<span class="keyword">new</span> StringSubstitutor(params);</span><br><span class="line">        String template = <span class="string">&quot;$&#123;userName&#125; 欢迎使用,您的验证码是$&#123;captcha&#125;&quot;</span>;</span><br><span class="line">        String result=stringSubstitutor.replace(template);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -430,6 +439,12 @@
           <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
