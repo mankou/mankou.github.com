@@ -160,7 +160,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/26/st4-usage/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/16/06-util-usage-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -174,7 +174,142 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/26/st4-usage/" class="post-title-link" itemprop="url">st4 字符串模板引擎的使用</a>
+            <a href="/2020/11/16/06-util-usage-01/" class="post-title-link" itemprop="url">工具类整理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-11-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-16T00:00:00+08:00">2020-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-08 15:36:09" itemprop="dateModified" datetime="2021-02-08T15:36:09+08:00">2021-02-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文推荐一些java中好用的工具类</p>
+<ol>
+<li>如统计执行时长的 Guava下的 Stopwatch 类</li>
+<li>Bean 与 Map 相互转换的 Apache的BeanUtils</li>
+</ol>
+<h1 id="计时相关"><a href="#计时相关" class="headerlink" title="计时相关"></a>计时相关</h1><p>项目中经常有记录某一操作花费多长时间的需求，如下是最开始的代码，是不是很熟悉？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line"><span class="comment">//do something</span></span><br><span class="line">Thread.sleep(<span class="number">2020</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">System.out.println(<span class="string">&quot;运行时间：&quot;</span>+(end - start)+ <span class="string">&quot;ms&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式确实简单，但是这种方式也有不灵活的地方</p>
+<ol>
+<li>默认情况下我们只能取ms为单位，如果需要分钟，则需要自己换算单位。</li>
+<li>不能支持更复杂的计时需求，如中途暂停计时，当代码执行到某一步再继续计时。</li>
+</ol>
+<p><strong>下面介绍一个关于计时的工具类 Guava下的 Stopwatch</strong></p>
+<p>引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.guava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guava<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>23.5-jre<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Stopwatch代码示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopwatch1</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="comment">//创建stopwatch并开始计时</span></span><br><span class="line">    Stopwatch stopwatch=Stopwatch.createStarted();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Thread.sleep(<span class="number">2020</span>);</span><br><span class="line">    System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//暂停计时</span></span><br><span class="line">    stopwatch.stop();</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//再次开始计时</span></span><br><span class="line">    stopwatch.start();</span><br><span class="line">    Thread.sleep(<span class="number">2020</span>);</span><br><span class="line">    stopwatch.stop();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//统计运行时长</span></span><br><span class="line">    System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到除了满足基本的计时需求外，其使用更灵活，更简单。 </p>
+<ol>
+<li><p>不需要自己再去计算时长</p>
+</li>
+<li><p>可以中途暂停计时</p>
+</li>
+</ol>
+<p>下面总结下常用的操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建计时器,但是不立即运行 需要主动调用 stopwatch.start()方法开始计时</span></span><br><span class="line">Stopwatch stopwatch=Stopwatch.createUnstarted();</span><br><span class="line">stopwatch.start();</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建stopwatch并开始计时</span></span><br><span class="line"> Stopwatch stopwatch=Stopwatch.createStarted();</span><br><span class="line"></span><br><span class="line"><span class="comment">//暂停计时</span></span><br><span class="line">stopwatch.stop();</span><br><span class="line"></span><br><span class="line"><span class="comment">//统计运行时长</span></span><br><span class="line">stopwatch.elapsed(TimeUnit.MILLISECONDS)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Bean-与Map-互转"><a href="#Bean-与Map-互转" class="headerlink" title="Bean 与Map 互转"></a>Bean 与Map 互转</h1><p>日常开发中经常有将Bean转成Map,或者将Map转成Bean的需求,这里阐述下具体的实现.</p>
+<p>目前我见过的的Map 与 Bean互转有如下几种方式</p>
+<ol>
+<li>方式一: 通过Jackson 先将Bean转成json,再将json转成Map</li>
+<li>方式二: 使用Spring的BeanMap类</li>
+<li>方式三: 使用Apache的BeanUtils</li>
+</ol>
+<p>我目前使用方式三. 原因如下</p>
+<ol>
+<li>方式一效率不行</li>
+<li>方式二 需要依赖spring,在有些非spring系工程中不方便使用</li>
+</ol>
+<p><strong>使用Apache的BeanUtils</strong></p>
+<p><strong>引入依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>bean 转 map</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * bean 转 map</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map <span class="title">beanToMap</span><span class="params">(Object bean)</span></span>&#123;</span><br><span class="line">    Map&lt;String,String&gt; map=Maps.newHashMap();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        map=BeanUtils.describe(bean);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> map;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>map 转bean</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * map 转 bean</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">mapToBean</span><span class="params">(Map map,Object bean)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        BeanUtils.populate(bean,map);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/26/04-st4-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/26/04-st4-usage/" class="post-title-link" itemprop="url">st4 字符串模板引擎的使用</a>
         </h2>
 
         <div class="post-meta">
@@ -264,7 +399,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/19/idea-plugin-recommend/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/19/05-idea-plugin-recommend/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -278,7 +413,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/19/idea-plugin-recommend/" class="post-title-link" itemprop="url">idea 插件推荐</a>
+            <a href="/2020/10/19/05-idea-plugin-recommend/" class="post-title-link" itemprop="url">idea 插件推荐</a>
         </h2>
 
         <div class="post-meta">
@@ -321,19 +456,19 @@
           <p>本文推荐一些好用的idea插件,用好这些插件可以省好多时间.</p>
 <h1 id="MyBatis-Log-Plugin"><a href="#MyBatis-Log-Plugin" class="headerlink" title="MyBatis Log Plugin"></a>MyBatis Log Plugin</h1><p>作用: 将mybatis打印到控制台的sql中的?替换成实际参数,替换后的sql可直接复制粘贴到数据库执行</p>
 <p>推荐理由: 快速将mybatis打印出的日志拼接成实际的sql,在调试sql时很方便.</p>
-<p><img src="/2020/10/19/idea-plugin-recommend/MyBatisLogPlugin-1.png" alt="MyBatisLogPlugin-1"></p>
+<p><img src="/2020/10/19/05-idea-plugin-recommend/MyBatisLogPlugin-1.png" alt="MyBatisLogPlugin-1"></p>
 <p>如下是生成的实际的sql</p>
-<p><img src="/2020/10/19/idea-plugin-recommend/MyBatisLogPlugin-2.png" alt="MyBatisLogPlugin-2"></p>
+<p><img src="/2020/10/19/05-idea-plugin-recommend/MyBatisLogPlugin-2.png" alt="MyBatisLogPlugin-2"></p>
 <h1 id="Free-Mybatis-Plugin"><a href="#Free-Mybatis-Plugin" class="headerlink" title="Free Mybatis Plugin"></a>Free Mybatis Plugin</h1><p>作用:快速在mybatis的mapper接口类和xml间跳转</p>
 <p>推荐理由: 从代码中快速跳转到mybatis的xml</p>
-<p><img src="/2020/10/19/idea-plugin-recommend/FreeMybatisPlugin-1.png" alt="FreeMybatisPlugin-1"></p>
+<p><img src="/2020/10/19/05-idea-plugin-recommend/FreeMybatisPlugin-1.png" alt="FreeMybatisPlugin-1"></p>
 <h1 id="RestfulToolkit"><a href="#RestfulToolkit" class="headerlink" title="RestfulToolkit"></a>RestfulToolkit</h1><p>作用: 其会根据url查找controller</p>
 <p>推荐理由: 通过url快速定位到controller, 方便快速定位到代码</p>
 <p>快捷键: command+\ </p>
-<p><img src="/2020/10/19/idea-plugin-recommend/RestfulToolkit-1.png" alt="image-20201019170120384"></p>
+<p><img src="/2020/10/19/05-idea-plugin-recommend/RestfulToolkit-1.png" alt="image-20201019170120384"></p>
 <h1 id="彩色括号-Rainbow-Bracket"><a href="#彩色括号-Rainbow-Bracket" class="headerlink" title="彩色括号 Rainbow Bracket"></a>彩色括号 Rainbow Bracket</h1><p>作用: 高亮显示括号配对</p>
 <p>推荐理由: 有时代码中的括号直的很多,不好分清楚这行代码到底在哪个括号里,有了彩色括号方便太多了.</p>
-<p><img src="/2020/10/19/idea-plugin-recommend/RainbowBrackets-1.png" alt="RainbowBrackets-1"></p>
+<p><img src="/2020/10/19/05-idea-plugin-recommend/RainbowBrackets-1.png" alt="RainbowBrackets-1"></p>
 
       
     </div>
@@ -353,7 +488,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/08/commons-text-usage/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/08/03-commons-text-usage/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -367,7 +502,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/10/08/commons-text-usage/" class="post-title-link" itemprop="url">使用commons-text 进行占位符替换</a>
+            <a href="/2020/10/08/03-commons-text-usage/" class="post-title-link" itemprop="url">使用commons-text 进行占位符替换</a>
         </h2>
 
         <div class="post-meta">
@@ -438,7 +573,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/myHello/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/02-my-hello/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -452,7 +587,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/03/myHello/" class="post-title-link" itemprop="url">myHello</a>
+            <a href="/2020/09/03/02-my-hello/" class="post-title-link" itemprop="url">myHello</a>
         </h2>
 
         <div class="post-meta">
@@ -497,7 +632,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/01-hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -511,7 +646,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/03/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+            <a href="/2020/09/03/01-hello-world/" class="post-title-link" itemprop="url">Hello World</a>
         </h2>
 
         <div class="post-meta">
@@ -629,7 +764,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -642,7 +777,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -669,7 +804,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
