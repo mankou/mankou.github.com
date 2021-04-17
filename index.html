@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-17 16:07:36" itemprop="dateModified" datetime="2021-04-17T16:07:36+08:00">2021-04-17</time>
+                <time title="Modified: 2021-04-17 16:10:43" itemprop="dateModified" datetime="2021-04-17T16:10:43+08:00">2021-04-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,8 +230,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate=<span class="keyword">new</span> RestTemplate();</span><br><span class="line">HttpHeaders headers=<span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.setContentType(MediaType.APPLICATION_JSON_UTF8);</span><br><span class="line">HttpEntity requestEntity=<span class="keyword">new</span> HttpEntity&lt;&gt;(bean,headers);</span><br><span class="line">ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMethod.POST,requestEntity,String.class);</span><br></pre></td></tr></table></figure>
 
 <p>以前spring帮我们初始化RestTemplate，现在我们需要自己new 对象了，其它使用方式没有区别。</p>
-<p><strong>关于初始化RestTemplate的说明</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> HttpComponentsClientHttpRequestFactory());</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> OkHttp3ClientHttpRequestFactory());</span><br></pre></td></tr></table></figure>
+<h1 id="关于初始化RestTemplate的说明"><a href="#关于初始化RestTemplate的说明" class="headerlink" title="关于初始化RestTemplate的说明"></a>关于初始化RestTemplate的说明</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> HttpComponentsClientHttpRequestFactory());</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> OkHttp3ClientHttpRequestFactory());</span><br></pre></td></tr></table></figure>
 
 <p>实际上RestTemplate自己并不实现具体的http操作，其只是对已有类库进行了封装，而其具体实现仍然依赖底层的类库</p>
 <ol>
