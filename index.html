@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-17 07:13:55" itemprop="dateModified" datetime="2021-04-17T07:13:55+08:00">2021-04-17</time>
+                <time title="Modified: 2021-04-17 16:07:36" itemprop="dateModified" datetime="2021-04-17T16:07:36+08:00">2021-04-17</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,7 +219,7 @@
 <p><strong>那为什么会有这样的场景呢？</strong>举个例子：我们要开发一个jar包提供给其他人，并集成到别人的工程中使用，该jar包封装对某短信接口的请求，别人只需要引入我们的jar包然后调用相关类即可，不用关心具体的http请求细节，因为我们提供的是一个很小的jar包，而不是一个完整的工程，所以再去用springboot那套就不合适了。</p>
 <p>大部分情况下我们的工程都是基于springboot或者spring系的，使用RestTemplate很简单，直接自动注入即可。</p>
 <p><strong>那在脱离了spring系的工程中我们还能开心的使用RestTemplate么？</strong></p>
-<h2 id="在非springboot工程中使用RestTemplate"><a href="#在非springboot工程中使用RestTemplate" class="headerlink" title="在非springboot工程中使用RestTemplate"></a>在非springboot工程中使用RestTemplate</h2><p><strong>步骤 pom.xml 中添加依赖</strong></p>
+<h1 id="在非springboot工程中使用RestTemplate"><a href="#在非springboot工程中使用RestTemplate" class="headerlink" title="在非springboot工程中使用RestTemplate"></a>在非springboot工程中使用RestTemplate</h1><p><strong>步骤 pom.xml 中添加依赖</strong></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
