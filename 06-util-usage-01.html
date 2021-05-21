@@ -23,18 +23,18 @@
   <meta name="description" content="本文推荐一些java中好用的工具类  如统计执行时长的 Guava下的 Stopwatch 类 Bean 与 Map 相互转换的 Apache的BeanUtils  计时相关项目中经常有记录某一操作花费多长时间的需求，如下是最开始的代码，是不是很熟悉？ 123456long start &#x3D; System.currentTimeMillis();&#x2F;&#x2F;do somethingThread.sleep(">
 <meta property="og:type" content="article">
 <meta property="og:title" content="工具类整理">
-<meta property="og:url" content="http://example.com/2020/11/16/06-util-usage-01/index.html">
+<meta property="og:url" content="http://example.com/06-util-usage-01.html">
 <meta property="og:site_name" content="小马向前走">
 <meta property="og:description" content="本文推荐一些java中好用的工具类  如统计执行时长的 Guava下的 Stopwatch 类 Bean 与 Map 相互转换的 Apache的BeanUtils  计时相关项目中经常有记录某一操作花费多长时间的需求，如下是最开始的代码，是不是很熟悉？ 123456long start &#x3D; System.currentTimeMillis();&#x2F;&#x2F;do somethingThread.sleep(">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-11-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-02-08T07:36:09.000Z">
+<meta property="article:modified_time" content="2021-05-21T09:21:59.877Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="工具类">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2020/11/16/06-util-usage-01/">
+<link rel="canonical" href="http://example.com/06-util-usage-01.html">
 
 
 <script id="page-configurations">
@@ -167,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/16/06-util-usage-01/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/06-util-usage-01.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-08 15:36:09" itemprop="dateModified" datetime="2021-02-08T15:36:09+08:00">2021-02-08</time>
+                <time title="Modified: 2021-05-21 17:21:59" itemprop="dateModified" datetime="2021-05-21T17:21:59+08:00">2021-05-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -254,8 +254,8 @@
 
 
 
-<h1 id="Bean-与Map-互转"><a href="#Bean-与Map-互转" class="headerlink" title="Bean 与Map 互转"></a>Bean 与Map 互转</h1><p>日常开发中经常有将Bean转成Map,或者将Map转成Bean的需求,这里阐述下具体的实现.</p>
-<p>目前我见过的的Map 与 Bean互转有如下几种方式</p>
+<h1 id="Bean-与-Map-互转"><a href="#Bean-与-Map-互转" class="headerlink" title="Bean 与 Map 互转"></a>Bean 与 Map 互转</h1><p>日常开发中经常有将Bean转成Map,或者将Map转成Bean的需求,这里阐述下具体的实现.</p>
+<p>目前Map 与 Bean互转有如下几种方式</p>
 <ol>
 <li>方式一: 通过Jackson 先将Bean转成json,再将json转成Map</li>
 <li>方式二: 使用Spring的BeanMap类</li>
@@ -263,7 +263,7 @@
 </ol>
 <p>我目前使用方式三. 原因如下</p>
 <ol>
-<li>方式一效率不行</li>
+<li>方式一 效率不行</li>
 <li>方式二 需要依赖spring,在有些非spring系工程中不方便使用</li>
 </ol>
 <p><strong>使用Apache的BeanUtils</strong></p>
@@ -277,7 +277,7 @@
 
 
 
-<p><strong>map 转bean</strong></p>
+<p><strong>map 转 bean</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * map 转 bean</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">mapToBean</span><span class="params">(Map map,Object bean)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        BeanUtils.populate(bean,map);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -301,11 +301,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/10/26/04-st4-usage/" rel="prev" title="st4 字符串模板引擎的使用">
+    <a href="/04-st4-usage.html" rel="prev" title="st4 字符串模板引擎的使用">
       <i class="fa fa-chevron-left"></i> st4 字符串模板引擎的使用
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/02/08/07-rest-template/" rel="next" title="RestTemplate在非springboot工程中的使用">
+    <a href="/07-rest-template.html" rel="next" title="RestTemplate在非springboot工程中的使用">
       RestTemplate在非springboot工程中的使用 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -366,7 +366,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E6%97%B6%E7%9B%B8%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">计时相关</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bean-%E4%B8%8EMap-%E4%BA%92%E8%BD%AC"><span class="nav-number">2.</span> <span class="nav-text">Bean 与Map 互转</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E6%97%B6%E7%9B%B8%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">计时相关</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bean-%E4%B8%8E-Map-%E4%BA%92%E8%BD%AC"><span class="nav-number">2.</span> <span class="nav-text">Bean 与 Map 互转</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

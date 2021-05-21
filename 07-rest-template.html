@@ -20,20 +20,22 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="背景描述日常开发工作中会遇到替换占位符的需求 例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好. 具体步骤引入 commons-text 的依赖 12345&lt;dependency&gt;    &lt;grou">
+  <meta name="description" content="问题的引出RestTemplate 是spring提供的访问rest接口的类，RestTemplate提供了多种便捷访问http服务的方法，使得调用rest接口更容易，记得在以前的代码中发送http请求我们还使用 HttpClient 或者 OkHttp 但其有如下的问题  代码复杂 需要操心资源回收等细节问题 每个项目组都有自己的一套http工具类，重复造轮子  现在我基本上用RestTempl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用commons-text 进行占位符替换">
-<meta property="og:url" content="http://example.com/2020/10/08/03-commons-text-usage/index.html">
+<meta property="og:title" content="RestTemplate在非springboot工程中的使用">
+<meta property="og:url" content="http://example.com/07-rest-template.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="背景描述日常开发工作中会遇到替换占位符的需求 例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好. 具体步骤引入 commons-text 的依赖 12345&lt;dependency&gt;    &lt;grou">
+<meta property="og:description" content="问题的引出RestTemplate 是spring提供的访问rest接口的类，RestTemplate提供了多种便捷访问http服务的方法，使得调用rest接口更容易，记得在以前的代码中发送http请求我们还使用 HttpClient 或者 OkHttp 但其有如下的问题  代码复杂 需要操心资源回收等细节问题 每个项目组都有自己的一套http工具类，重复造轮子  现在我基本上用RestTempl">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-10-08T06:36:02.000Z">
-<meta property="article:modified_time" content="2020-10-19T03:38:43.000Z">
+<meta property="og:image" content="http://example.com/qrcode-12cm.jpg">
+<meta property="article:published_time" content="2021-02-08T07:34:58.000Z">
+<meta property="article:modified_time" content="2021-04-17T22:52:39.711Z">
 <meta property="article:author" content="maning">
-<meta property="article:tag" content="java">
+<meta property="article:tag" content="rest">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/qrcode-12cm.jpg">
 
-<link rel="canonical" href="http://example.com/2020/10/08/03-commons-text-usage/">
+<link rel="canonical" href="http://example.com/07-rest-template.html">
 
 
 <script id="page-configurations">
@@ -46,7 +48,7 @@
   };
 </script>
 
-  <title>使用commons-text 进行占位符替换 | 小马向前走</title>
+  <title>RestTemplate在非springboot工程中的使用 | 小马向前走</title>
   
 
 
@@ -166,7 +168,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/08/03-commons-text-usage/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/07-rest-template.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -179,7 +181,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          使用commons-text 进行占位符替换
+          RestTemplate在非springboot工程中的使用
         </h1>
 
         <div class="post-meta">
@@ -189,14 +191,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-10-08 14:36:02" itemprop="dateCreated datePublished" datetime="2020-10-08T14:36:02+08:00">2020-10-08</time>
+              <time title="Created: 2021-02-08 15:34:58" itemprop="dateCreated datePublished" datetime="2021-02-08T15:34:58+08:00">2021-02-08</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-19 11:38:43" itemprop="dateModified" datetime="2020-10-19T11:38:43+08:00">2020-10-19</time>
+                <time title="Modified: 2021-04-18 06:52:39" itemprop="dateModified" datetime="2021-04-18T06:52:39+08:00">2021-04-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -219,18 +221,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="背景描述"><a href="#背景描述" class="headerlink" title="背景描述"></a>背景描述</h1><p>日常开发工作中会遇到替换占位符的需求</p>
-<p>例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好.</p>
-<h1 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h1><p>引入 commons-text 的依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-text<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+        <h1 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h1><p>RestTemplate 是spring提供的访问rest接口的类，RestTemplate提供了多种便捷访问http服务的方法，使得调用rest接口更容易，记得在以前的代码中发送http请求我们还使用 HttpClient 或者 OkHttp 但其有如下的问题</p>
+<ol>
+<li>代码复杂</li>
+<li>需要操心资源回收等细节问题</li>
+<li>每个项目组都有自己的一套http工具类，重复造轮子</li>
+</ol>
+<p>现在我基本上用RestTemplate代替了以前自己写的工具类。</p>
+<p><strong>本文不讲RestTemplate的普遍使用方法，而是讲在非springboot工程中如何使用RestTemplate</strong></p>
+<p><strong>那为什么会有这样的场景呢？</strong>举个例子：我们要开发一个jar包提供给其他人，并集成到别人的工程中使用，该jar包封装对某短信接口的请求细节，别人只需要引入我们的jar包然后调用相关类即可，不用关心具体的http请求细节，因为我们提供的是一个很小的jar包，而不是一个完整的工程，所以再去用springboot那套就不合适了。</p>
+<p>大部分情况下我们的工程都是基于springboot或者spring系的，使用RestTemplate很简单，直接自动注入即可。 </p>
+<p><strong>那在脱离了spring系的工程中我们还能开心的使用RestTemplate么？</strong></p>
+<h1 id="在非springboot工程中使用RestTemplate"><a href="#在非springboot工程中使用RestTemplate" class="headerlink" title="在非springboot工程中使用RestTemplate"></a>在非springboot工程中使用RestTemplate</h1><p><strong>步骤 pom.xml 中添加依赖</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>具体代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 演示最简单的使用方式</span></span><br><span class="line"><span class="comment">        * 这里默认的替换符就是$&#123;&#125;</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        params.put(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        params.put(<span class="string">&quot;captcha&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        StringSubstitutor stringSubstitutor=<span class="keyword">new</span> StringSubstitutor(params);</span><br><span class="line">        String template = <span class="string">&quot;$&#123;userName&#125; 欢迎使用,您的验证码是$&#123;captcha&#125;&quot;</span>;</span><br><span class="line">        String result=stringSubstitutor.replace(template);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+<p><strong>步骤 代码中使用</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate=<span class="keyword">new</span> RestTemplate();</span><br><span class="line">HttpHeaders headers=<span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.setContentType(MediaType.APPLICATION_JSON_UTF8);</span><br><span class="line">HttpEntity requestEntity=<span class="keyword">new</span> HttpEntity&lt;&gt;(bean,headers);</span><br><span class="line">ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMethod.POST,requestEntity,String.class);</span><br></pre></td></tr></table></figure>
+
+<p>以前spring帮我们初始化RestTemplate，现在我们需要自己new 对象了，其它使用方式没有区别。</p>
+<h1 id="关于初始化RestTemplate的说明"><a href="#关于初始化RestTemplate的说明" class="headerlink" title="关于初始化RestTemplate的说明"></a>关于初始化RestTemplate的说明</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> HttpComponentsClientHttpRequestFactory());</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> OkHttp3ClientHttpRequestFactory());</span><br></pre></td></tr></table></figure>
+
+<p>实际上RestTemplate自己并不实现具体的http操作，其只是对已有类库进行了封装，而其具体实现仍然依赖底层的类库</p>
+<ol>
+<li>上面第一种初始化方法 其使用JDK自带的 HttpURLConnection</li>
+<li>第二种初始化方法 使用的是 HttpClient 库</li>
+<li>第三种初始化方法 使用的是 OkHttp 库</li>
+</ol>
+<p>所以如果对具体使用的类库有要求的话，应该在初始化时指定具体的工厂类，当然还需要添加相关的依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.httpcomponents&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;httpclient&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.5.3&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.squareup.okhttp3&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;okhttp&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.11.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
 
 
 
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><strong>小马向前走</strong></p>
+<p><img src="/qrcode-12cm.jpg" alt="qrcode-12cm"></p>
 
     </div>
 
@@ -240,7 +269,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/rest/" rel="tag"># rest</a>
           </div>
 
         
@@ -249,13 +278,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/09/03/02-my-hello/" rel="prev" title="myHello">
-      <i class="fa fa-chevron-left"></i> myHello
+    <a href="/06-util-usage-01.html" rel="prev" title="工具类整理">
+      <i class="fa fa-chevron-left"></i> 工具类整理
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/10/19/05-idea-plugin-recommend/" rel="next" title="idea 插件推荐">
-      idea 插件推荐 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -314,7 +340,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">背景描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">具体步骤</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E7%9A%84%E5%BC%95%E5%87%BA"><span class="nav-number">1.</span> <span class="nav-text">问题的引出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E9%9D%9Espringboot%E5%B7%A5%E7%A8%8B%E4%B8%AD%E4%BD%BF%E7%94%A8RestTemplate"><span class="nav-number">2.</span> <span class="nav-text">在非springboot工程中使用RestTemplate</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%88%9D%E5%A7%8B%E5%8C%96RestTemplate%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="nav-number">3.</span> <span class="nav-text">关于初始化RestTemplate的说明</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

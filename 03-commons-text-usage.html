@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="背景描述日常开发工作中会遇到替换占位符的需求 例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好. 具体步骤引入 commons-text 的依赖 12345&lt;dependency&gt;    &lt;grou">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2020/09/03/01-hello-world/index.html">
+<meta property="og:title" content="使用commons-text 进行占位符替换">
+<meta property="og:url" content="http://example.com/03-commons-text-usage.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="背景描述日常开发工作中会遇到替换占位符的需求 例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好. 具体步骤引入 commons-text 的依赖 12345&lt;dependency&gt;    &lt;grou">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-09-03T06:52:27.000Z">
-<meta property="article:modified_time" content="2020-09-03T06:52:27.000Z">
+<meta property="article:published_time" content="2020-10-08T06:36:02.000Z">
+<meta property="article:modified_time" content="2020-10-19T03:38:43.000Z">
 <meta property="article:author" content="maning">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2020/09/03/01-hello-world/">
+<link rel="canonical" href="http://example.com/03-commons-text-usage.html">
 
 
 <script id="page-configurations">
@@ -45,7 +46,7 @@
   };
 </script>
 
-  <title>Hello World | 小马向前走</title>
+  <title>使用commons-text 进行占位符替换 | 小马向前走</title>
   
 
 
@@ -165,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/01-hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/03-commons-text-usage.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -178,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          使用commons-text 进行占位符替换
         </h1>
 
         <div class="post-meta">
@@ -188,7 +189,23 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-09-03 14:52:27" itemprop="dateCreated datePublished" datetime="2020-09-03T14:52:27+08:00">2020-09-03</time>
+              <time title="Created: 2020-10-08 14:36:02" itemprop="dateCreated datePublished" datetime="2020-10-08T14:36:02+08:00">2020-10-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-19 11:38:43" itemprop="dateModified" datetime="2020-10-19T11:38:43+08:00">2020-10-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
             </span>
 
           
@@ -202,19 +219,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+        <h1 id="背景描述"><a href="#背景描述" class="headerlink" title="背景描述"></a>背景描述</h1><p>日常开发工作中会遇到替换占位符的需求</p>
+<p>例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好.</p>
+<h1 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h1><p>引入 commons-text 的依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-text<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>具体代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 演示最简单的使用方式</span></span><br><span class="line"><span class="comment">        * 这里默认的替换符就是$&#123;&#125;</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        params.put(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        params.put(<span class="string">&quot;captcha&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        StringSubstitutor stringSubstitutor=<span class="keyword">new</span> StringSubstitutor(params);</span><br><span class="line">        String template = <span class="string">&quot;$&#123;userName&#125; 欢迎使用,您的验证码是$&#123;captcha&#125;&quot;</span>;</span><br><span class="line">        String result=stringSubstitutor.replace(template);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+
 
     </div>
 
@@ -223,16 +239,22 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/09/03/02-my-hello/" rel="next" title="myHello">
-      myHello <i class="fa fa-chevron-right"></i>
+    <a href="/02-my-hello.html" rel="prev" title="myHello">
+      <i class="fa fa-chevron-left"></i> myHello
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/05-idea-plugin-recommend.html" rel="next" title="idea 插件推荐">
+      idea 插件推荐 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -292,7 +314,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">背景描述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">具体步骤</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
