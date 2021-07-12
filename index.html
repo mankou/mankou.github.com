@@ -162,6 +162,107 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/08-restclient/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/12/08-restclient/" class="post-title-link" itemprop="url">REST Client 插件的使用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-12 12:08:33 / Modified: 12:10:49" itemprop="dateCreated datePublished" datetime="2021-07-12T12:08:33+08:00">2021-07-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>REST Client</p>
+<p>REST Client 是一个 VSCode 中的一个插件，使我们可以直接在 VSCode 中直接发送http请求，目前我用它来代替 postman 做一些简单接口测试。</p>
+<p>REST Client allows you to send HTTP request and view the response in Visual Studio Code directly</p>
+<p><img src="/2021/07/12/08-restclient/RestClient-1.png" alt="RestClient-1"></p>
+<p>说起测试接口，大家一定会想起 postman ，那在引入 VSCode 的 REST Client 插件之前，需要解答一个问题，难道 postman 不香么，为什么还要引入新工具? 实际上 postman 很香，只是对于一些入参简单的请求，用 postman 感觉太重了，而且如果接口数量很多，导致打开很多标签。</p>
+<p><strong>一直以来我也在寻找更好的方案，一个不用切换窗口的方案</strong>  – 终于在使用 VSCode 一段时版本间，我找到了 REST Client 插件，初看 REST Client 插件的时候，会觉得他十分的简陋，但是在使用一段时间后会发现在 REST Client 插件中已经有完成接口测试所需的大部分内容。</p>
+<p><strong>这里总结下使用REST Client插件的好处</strong></p>
+<ol>
+<li>不用切换标签，这是我使用它的主要原因</li>
+<li>联调时可以做为一个成果物，发给前端，做为测试列表</li>
+<li>可以更直接的接触到http的相关知识，因为不论请求还是返回都是文本，这样可以更直接的感受到http请求的细节</li>
+</ol>
+<h1 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h1><p>本节列出几个示例，指引大家快速入门</p>
+<h2 id="示例1-get请求示例"><a href="#示例1-get请求示例" class="headerlink" title="示例1 get请求示例"></a>示例1 get请求示例</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
+
+<p>这里演示如何发送一个get请求</p>
+<h2 id="示例2-post-请求示例"><a href="#示例2-post-请求示例" class="headerlink" title="示例2 post 请求示例"></a>示例2 post 请求示例</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### post 请求示例</span><br><span class="line">POST &#123;&#123;host&#125;&#125;/authorize/register</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;张三&quot;，</span><br><span class="line">    &quot;username&quot;: &quot;zhangsan&quot;，</span><br><span class="line">    &quot;password&quot;: &quot;qwerty12345T!&quot;，</span><br><span class="line">    &quot;matchingPassword&quot;: &quot;12345678&quot;，</span><br><span class="line">    &quot;email&quot;: &quot;zs@local&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里演示如何发送一个post请求</p>
+<p><strong>注意data 与请求头之间有空行</strong></p>
+<h1 id="高阶使用"><a href="#高阶使用" class="headerlink" title="高阶使用"></a>高阶使用</h1><p>其实REST Client还有很多的功能，有需求的同学可以慢慢挖掘，笔者列出了一些比较有用的高阶功能。</p>
+<h2 id="示例1-变量的使用"><a href="#示例1-变量的使用" class="headerlink" title="示例1 变量的使用"></a>示例1 变量的使用</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
+
+<p>实际上细心的你可以已经发现，在前面的简单示例中IP并没有写死，而使用了一个变量，这样做的好处是可以快速切换环境。</p>
+<p>这里的变量不光是变量，还可以是环境变量，其在使用方式没有差别。</p>
+<h2 id="示例2-Get请求参数写成多行"><a href="#示例2-Get请求参数写成多行" class="headerlink" title="示例2 Get请求参数写成多行"></a>示例2 Get请求参数写成多行</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### get 请求 参数写到多行示例</span><br><span class="line">GET https://example.com/comments</span><br><span class="line">    ?page=2</span><br><span class="line">    &amp;pageSize=10</span><br></pre></td></tr></table></figure>
+
+<p>如果参数有很多，写在一行上不方便阅读和修改，则可以像这里一样分行写，一行一个。</p>
+<h2 id="示例3-添加头信息"><a href="#示例3-添加头信息" class="headerlink" title="示例3 添加头信息"></a>示例3 添加头信息</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 测试 不拦截 请求头中加标记</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testMap</span><br><span class="line"><span class="attribute">XX-NOT-INTERCEPT:true</span></span><br></pre></td></tr></table></figure>
+
+<p>如果需要添加自定义的头信息可以这样添加。</p>
+<h2 id="示例4-添加cookie"><a href="#示例4-添加cookie" class="headerlink" title="示例4 添加cookie"></a>示例4 添加cookie</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 测试 cookie</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testCookie</span><br><span class="line"><span class="attribute">Cookie</span>: xyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdGFmZkNvZGUiOiJCMDAxMDAxIiwib3JnQ29kZSI6IiIsInN0YWZmTmFtZSI6Iuezu-e7n-xyoeeQhuWRmCIsInRlbmFudElkIjoiNjAxMTRhYjBlZTIxNDE5YWE0YTcwYTk1NzEyYjJlNDgiLCJpc0FkbWluIjoiMSIsInRlbmFudENvZGUiOiJ0ZW5fY2VudGVyXzAwMSIsImV4cCI6MTYyMjEwMzAxMiwic3RhZmZJZCI6IjAwMDAifQ.NWb37OTTXVGnLiaNk4xm4PUDteXZkE70PSZDamekgeM</span><br></pre></td></tr></table></figure>
+
+<p>这里演示在请求中如何添加cookie， 实际上cookie也是头的一部分，和添加头没什么区别。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/08/07-rest-template/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -886,7 +987,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -899,7 +1000,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
