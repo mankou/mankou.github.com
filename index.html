@@ -162,6 +162,68 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/02/24/09-restclient2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/02/24/09-restclient2/" class="post-title-link" itemprop="url">为什么使用REST Client插件?</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-02-24 12:02:00" itemprop="dateCreated datePublished" datetime="2022-02-24T12:02:00+08:00">2022-02-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>接口调试是每个软件开发从业者必不可少的一项技能，一个项目的完成，可能接口调试的时间比真正开发写代码的时间还要多，几乎是每个开发者的日常工作项。</p>
+<p>之前写的几篇文章都是从<strong>HOW</strong>的角度讲如何使用 REST Client 插件，  没有从为什么的角度去讲， 今天将从<strong>WHY</strong>的角度讲为什么使用该插件。 </p>
+<p>实际上有很多接口测试工具 如postman， swagger， 他们的使用体验都非常好，那为什么我们会选择REST Client 插件呢? </p>
+<p><strong>其除了能满足基本的接口测试功能外， 最大的好处就在于分享</strong>， 因为接口文件是纯文本，我们可以把HTTP文件放到GitLab上， 这样既便于管理也便于分享。 所有开发者或者使用项目的人都能复用这个HTTP文件，也极大的方便管理所有REST API， <strong>满足自己的同时也方便了他人</strong>。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p><strong>当你跳出个人的视角，从团队的角度出发， 拉通各个环节之间的壁垒， 提升协作的效率 ， 也许比单纯的局部优化要好</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/08-restclient/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -193,7 +255,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-13 18:25:06" itemprop="dateModified" datetime="2021-07-13T18:25:06+08:00">2021-07-13</time>
+                <time title="Modified: 2022-02-24 12:00:17" itemprop="dateModified" datetime="2022-02-24T12:00:17+08:00">2022-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,31 +280,33 @@
       
           <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>REST Client 是一个 VSCode 插件，使我们可以直接在 VSCode 中直接发送http请求，目前我用它来代替 postman 做一些简单接口测试。</p>
 <p>REST Client allows you to send HTTP request and view the response in Visual Studio Code directly</p>
-<p><img src="/2021/07/12/08-restclient/RestClient-1.png" alt="RestClient-1"></p>
+<p><img src="/2021/07/12/08-restclient/restClient-1.png" alt="RestClient-1"></p>
 <p>说起测试接口，大家一定会想起 postman ，那在引入 REST Client 插件之前，需要解答一个问题，难道 postman 不香么，为什么还要引入新工具? 实际上 postman 很香，只是对于一些入参简单的请求，用 postman 感觉太重了，而且如果接口数量很多，导致打开很多标签。</p>
-<p><strong>一直以来我也在寻找更好的方案，一个不用切换窗口的方案</strong>  – 终于在使用 VSCode 一段时间后，我找到了 REST Client 插件，初看 REST Client 插件的时候，会觉得他十分简陋，但是在使用一段时间后会发现在 REST Client 插件中已经有完成接口测试所需的大部分内容。</p>
+<p><strong>一直以来我也在寻找更好的方案，一个不用切换窗口的方案</strong>  – 终于在使用 VSCode 一段时间后，我找到了 REST Client 插件，初看 REST Client 插件的时候，会觉得他十分简陋，但是在使用一段时间后会发现在 REST Client 插件中已经有完成接口测试所需的大部分功能。</p>
 <p><strong>我总结了3点使用REST Client插件的好处</strong></p>
 <ol>
-<li>不用切换标签，这是我使用它的主要原因</li>
-<li>联调时可以做为一个成果物，发给前端开发同事，做为测试列表</li>
+<li>便于分享，因为是纯文本，联调时可以做为一个成果物，发给前端开发同事做为测试列表，这是我使用它的主要原因</li>
+<li>不用切换标签，通过###分隔符，同一个HTTP文件里可以包含多个HTTP请求， 不像Postman，不同的HTTP请求需要放在不同的tab里</li>
 <li>可以更直接的接触到http的相关知识，因为不论请求还是返回都是文本，这样可以更直接的感受到http请求的细节</li>
 </ol>
+<h1 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h1><p>github </p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Huachao/vscode-restclient">https://github.com/Huachao/vscode-restclient</a></p>
 <h1 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h1><p>本节列出几个示例，指引大家快速入门</p>
 <h2 id="示例1-get请求示例"><a href="#示例1-get请求示例" class="headerlink" title="示例1 get请求示例"></a>示例1 get请求示例</h2><p>这里演示如何发送一个get请求，从该示例中你会掌握基本的用法</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
 
 <p>当一个文件的后缀名是.http 或者 .rest时，VSCode 会自动识别成接口文件</p>
-<p>在VSCode中 <strong>用三个#号 表示一个接口的开始</strong>，其下方有一个 Send Request的按钮，当点击该按钮时会发送请求，之后会在窗口右边显示请求返回的内容</p>
-<p><img src="/2021/07/12/08-restclient/demo1.png" alt="demo1"></p>
+<p>在VSCode中 <strong>用三个#号 ### 表示一个接口的开始</strong>，其下方会有一个 Send Request的按钮，当点击该按钮时会发送请求，之后会在窗口右边显示请求返回的内容</p>
+<p><img src="/2021/07/12/08-restclient/restClient-26417.png" alt="restClient-26417"></p>
 <h2 id="示例2-post请求示例"><a href="#示例2-post请求示例" class="headerlink" title="示例2 post请求示例"></a>示例2 post请求示例</h2><p>这里演示如何发送一个post请求</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### post 请求示例</span><br><span class="line">POST &#123;&#123;IP&#125;&#125;/authorize/register</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;小天&quot;,</span><br><span class="line">    &quot;username&quot;: &quot;sky&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### post 请求示例</span><br><span class="line">POST &#123;&#123;IP&#125;&#125;/authorize/register</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;小天&quot;，</span><br><span class="line">    &quot;username&quot;: &quot;sky&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>注意data 与请求头之间有空行</strong></p>
 <h1 id="高阶使用"><a href="#高阶使用" class="headerlink" title="高阶使用"></a>高阶使用</h1><p>其实REST Client还有很多的功能，有需求的同学可以慢慢挖掘，笔者列出了一些比较有用的高阶技巧。</p>
 <h2 id="示例1-变量的使用"><a href="#示例1-变量的使用" class="headerlink" title="示例1 变量的使用"></a>示例1 变量的使用</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
 
 <p>实际上细心的你可能已经发现，在前面的简单示例中IP并没有写死，而是使用了一个变量，这样做的好处是可以快速切换环境。</p>
-<p>当然这里的变量可以不光是变量，还可以是环境变量，其在使用方式没有差别。</p>
+<p>当然这里的变量可以不光是变量，还可以是环境变量，其在使用方式上没有差别。</p>
 <h2 id="示例2-Get请求参数写成多行"><a href="#示例2-Get请求参数写成多行" class="headerlink" title="示例2 Get请求参数写成多行"></a>示例2 Get请求参数写成多行</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### get 请求 参数写到多行示例</span><br><span class="line">GET https://example.com/comments</span><br><span class="line">    ?page=2</span><br><span class="line">    &amp;pageSize=10</span><br></pre></td></tr></table></figure>
 
 <p>如果参数有很多，写在一行上不方便阅读和修改，则可以像这里一样分行写，一行一个。</p>
@@ -252,6 +316,11 @@
 <h2 id="示例4-添加cookie"><a href="#示例4-添加cookie" class="headerlink" title="示例4 添加cookie"></a>示例4 添加cookie</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 测试 cookie</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testCookie</span><br><span class="line"><span class="attribute">Cookie</span>: eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxNjI2MTA1NjAwIiwic3ViIjoic2t5Iiwib2ZmaWNpYWxBY2NvdW50cyI6IuWwj-mprOWQkeWJjei1sCIsImlhdCI6MTYyNjE3MTcwMywiZXhwIjoxNjI2MTcyMjAzfQ.PTzL-lw6NQb2qhQg_-q2DWmMOe-1IcpEWcKyLv2rQfQhnrJiIEnVEd0s4FKxre5qVkyfc9b40u31dvJS-ejYUg</span><br></pre></td></tr></table></figure>
 
 <p>这里演示在请求中如何添加cookie， 实际上cookie也是头的一部分，和添加头没什么区别。</p>
+<h2 id="示例5-代码生成"><a href="#示例5-代码生成" class="headerlink" title="示例5 代码生成"></a>示例5 代码生成</h2><p>代码生成也是REST Client里一个很方便的功能</p>
+<p><img src="/2021/07/12/08-restclient/restClient-128.png" alt="restClient-128"></p>
+<p>你可以方便地通过 Generate Code Snippet 命令来把HTTP请求生成出不同编程语言的代码：JavaScript， Python， C， C#， Java， PHP， Go， Ruby， Swift等等主流语言。</p>
+<p>也可以生成<code>curl</code> 命令， 在运维时有可能网络不通，需要登录到机器上执行curl测试接口，但也许你对curl命令不熟悉， 不能很快写出命令，则可以借助REST Client 直接生成curl命令。</p>
+<p><img src="/2021/07/12/08-restclient/restClient-25289.png" alt="restClient-25289"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本节演示了REST Client的一些用法，希望大家把 VSCode 转化为一个 REST 接口测试的利器。</p>
 <hr>
 <p>微信端的朋友也可关注我的公众号</p>
@@ -1000,7 +1069,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1040,7 +1109,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
