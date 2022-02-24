@@ -28,13 +28,14 @@
 <meta property="og:description" content="引言REST Client 是一个 VSCode 插件，使我们可以直接在 VSCode 中直接发送http请求，目前我用它来代替 postman 做一些简单接口测试。 REST Client allows you to send HTTP request and view the response in Visual Studio Code directly  说起测试接口，大家一定会想起 pos">
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-28456.png">
+<meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-13246.png">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-26417.png">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-21529.gif">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-128.png">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/restClient-25289.png">
 <meta property="og:image" content="http://example.com/2021/07/12/08-restclient/qrcode-12cm.jpg">
 <meta property="article:published_time" content="2021-07-12T04:08:33.000Z">
-<meta property="article:modified_time" content="2022-02-24T08:38:27.591Z">
+<meta property="article:modified_time" content="2022-02-24T09:33:24.373Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="rest">
 <meta property="article:tag" content="vscode">
@@ -204,7 +205,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-24 16:38:27" itemprop="dateModified" datetime="2022-02-24T16:38:27+08:00">2022-02-24</time>
+                <time title="Modified: 2022-02-24 17:33:24" itemprop="dateModified" datetime="2022-02-24T17:33:24+08:00">2022-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,6 +241,8 @@
 </ol>
 <h1 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h1><p>github </p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Huachao/vscode-restclient">https://github.com/Huachao/vscode-restclient</a></p>
+<h1 id="关于安装"><a href="#关于安装" class="headerlink" title="关于安装"></a>关于安装</h1><p>直接在插件商店中搜索 REST Client 安装即可</p>
+<p><img src="/2021/07/12/08-restclient/restClient-13246.png" alt="restClient-13246"></p>
 <h1 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h1><p>本节列出几个示例，指引大家快速入门</p>
 <h2 id="示例1-get请求示例"><a href="#示例1-get请求示例" class="headerlink" title="示例1 get请求示例"></a>示例1 get请求示例</h2><p>这里演示如何发送一个get请求，从该示例中你会掌握基本的用法</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
@@ -370,7 +373,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">相关资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1-get%E8%AF%B7%E6%B1%82%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.1.</span> <span class="nav-text">示例1 get请求示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2-post%E8%AF%B7%E6%B1%82%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">示例2 post请求示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E9%98%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">高阶使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1-%E5%8F%98%E9%87%8F%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">示例1 变量的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2-Get%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%86%99%E6%88%90%E5%A4%9A%E8%A1%8C"><span class="nav-number">4.2.</span> <span class="nav-text">示例2 Get请求参数写成多行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B3-%E6%B7%BB%E5%8A%A0%E5%A4%B4%E4%BF%A1%E6%81%AF"><span class="nav-number">4.3.</span> <span class="nav-text">示例3 添加头信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B4-%E6%B7%BB%E5%8A%A0cookie"><span class="nav-number">4.4.</span> <span class="nav-text">示例4 添加cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B5-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90"><span class="nav-number">4.5.</span> <span class="nav-text">示例5 代码生成</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="nav-number">2.</span> <span class="nav-text">相关资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">关于安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">简单使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1-get%E8%AF%B7%E6%B1%82%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.1.</span> <span class="nav-text">示例1 get请求示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2-post%E8%AF%B7%E6%B1%82%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.2.</span> <span class="nav-text">示例2 post请求示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E9%98%B6%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">高阶使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B1-%E5%8F%98%E9%87%8F%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">5.1.</span> <span class="nav-text">示例1 变量的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B2-Get%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0%E5%86%99%E6%88%90%E5%A4%9A%E8%A1%8C"><span class="nav-number">5.2.</span> <span class="nav-text">示例2 Get请求参数写成多行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B3-%E6%B7%BB%E5%8A%A0%E5%A4%B4%E4%BF%A1%E6%81%AF"><span class="nav-number">5.3.</span> <span class="nav-text">示例3 添加头信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B4-%E6%B7%BB%E5%8A%A0cookie"><span class="nav-number">5.4.</span> <span class="nav-text">示例4 添加cookie</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B5-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90"><span class="nav-number">5.5.</span> <span class="nav-text">示例5 代码生成</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
