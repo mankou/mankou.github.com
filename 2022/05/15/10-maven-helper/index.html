@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="背景说明如果你的工程中使用maven， 你是否亲自处理过jar包冲突? jar包冲突一般是间接依赖引起的，举个例子，假如你在项目中使用了2个jar包，分别是A和B， 现在A依赖C， B也依赖C， 但是A依赖的C的版本是1.0， B依赖的C的版本是2.0。 这时候你的项目中的C就会有2个不同的版本，这时maven会依据自己的原则，来决定使用哪个版本的jar包， 而另一个无用的的jar包则未被使用，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven jar包冲突的原理及解决办法">
+<meta property="og:url" content="http://example.com/2022/05/15/10-maven-helper/index.html">
+<meta property="og:site_name" content="小马向前走">
+<meta property="og:description" content="背景说明如果你的工程中使用maven， 你是否亲自处理过jar包冲突? jar包冲突一般是间接依赖引起的，举个例子，假如你在项目中使用了2个jar包，分别是A和B， 现在A依赖C， B也依赖C， 但是A依赖的C的版本是1.0， B依赖的C的版本是2.0。 这时候你的项目中的C就会有2个不同的版本，这时maven会依据自己的原则，来决定使用哪个版本的jar包， 而另一个无用的的jar包则未被使用，这">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-27267.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-20082.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-7082.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-7069.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-26949.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-24139.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-30182.png">
+<meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/qrcode-12cm.jpg">
+<meta property="article:published_time" content="2022-05-15T14:31:24.000Z">
+<meta property="article:modified_time" content="2022-05-15T22:07:23.348Z">
+<meta property="article:author" content="maning">
+<meta property="article:tag" content="maven，idea">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-27267.png">
+
+<link rel="canonical" href="http://example.com/2022/05/15/10-maven-helper/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>maven jar包冲突的原理及解决办法 | 小马向前走</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小马向前走</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/15/10-maven-helper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          maven jar包冲突的原理及解决办法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-15 22:31:24" itemprop="dateCreated datePublished" datetime="2022-05-15T22:31:24+08:00">2022-05-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-16 06:07:23" itemprop="dateModified" datetime="2022-05-16T06:07:23+08:00">2022-05-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景说明"><a href="#背景说明" class="headerlink" title="背景说明"></a>背景说明</h1><p>如果你的工程中使用maven， <strong>你是否亲自处理过jar包冲突</strong>?</p>
+<p>jar包冲突一般是间接依赖引起的，举个例子，假如你在项目中使用了2个jar包，分别是A和B， 现在A依赖C， B也依赖C， 但是A依赖的C的版本是1.0， B依赖的C的版本是2.0。</p>
+<p>这时候你的项目中的C就会有2个不同的版本，这时maven会依据自己的原则，来决定使用哪个版本的jar包， 而另一个无用的的jar包则未被使用，这就是所谓的<strong>依赖冲突</strong>。</p>
+<p>在大多数情况下，依赖冲突并不会对系统造成什么异常，但是在某些情况下，有可能会出现找不到类的异常， <strong>因此理解冲突导致的原因并且快速定位到冲突源，是每个程序员的必修课</strong>。</p>
+<p>这里列出一些常见的由于jar包冲突导致的异常</p>
+<ul>
+<li>程序抛出java.lang.ClassNotFoundException异常</li>
+<li>程序抛出java.lang.NoSuchMethodError异常</li>
+<li>程序抛出java.lang.NoClassDefFoundError异常</li>
+<li>程序抛出java.lang.LinkageError异常等</li>
+</ul>
+<p>这些是能够直观呈现的，当然还有隐性的异常，比如程序执行结果与预期不符等。</p>
+<h1 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h1><p>上面介绍了什么是jar包冲突以及jar包冲突有可能产生的错误， 本节讲一些maven jar包管理原则，了解这些背景知识会帮助我们解决jar包冲突。</p>
+<h2 id="依赖传递"><a href="#依赖传递" class="headerlink" title="依赖传递"></a>依赖传递</h2><p>当在maven项目中引入A依赖，A依赖通常又会引入B的jar包，B可能还会引入C的jar包。这样，当你在pom.xml文件中添加了A依赖，maven会自动帮你把所有相关的依赖都添加进来. 这就叫做<strong>依赖传递</strong>. transitive dependencies</p>
+<p>maven引入依赖传递机制，一方面大大简化和方便了依赖声明，另一方面，<strong>大部分情况下我们只需要关心项目的直接依赖是什么，而不用考虑这些间接依赖</strong>。但有时候，当依赖传递造成问题的时候，我们就需要清楚地知道该传递性依赖是从哪条依赖路径引入的。</p>
+<h2 id="依赖调解"><a href="#依赖调解" class="headerlink" title="依赖调解"></a>依赖调解</h2><p>上一节讲了maven的依赖传递， 其是jar包冲突产生的原因， 而当maven中出现依赖冲突时，其又是如何解决的呢? 这就涉及到依赖调解，maven中有2条处理依赖的原则</p>
+<ol>
+<li>第一原则：最短路径优先原则</li>
+<li>第二原则：最先声明优先原则</li>
+</ol>
+<p><strong>最短路径优先原则</strong></p>
+<p><strong>主要根据依赖的路径长短来决定引入哪个依赖</strong>（两个冲突的依赖）</p>
+<p><strong>示例:</strong></p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-27267.png" alt="maven-helper-27267"></p>
+<p>项目中同时引入了A和B两个依赖，它们都间接引入了Z依赖，但由于B的依赖链路比较短，因此最终生效的是Z(20.0)版本。这就是最短路径优先原则。</p>
+<p>此时如果Z的21.0版本和20.0版本区别较大，那么就会发生jar包冲突的表现</p>
+<p><strong>最先声明优先原则</strong></p>
+<p>如果两个依赖的路径一样，最短路径优先原则是无法进行判断的，此时需要使用<strong>最先声明优先原则</strong>，也就是说，谁的声明在前则优先选择谁。</p>
+<p><strong>示例:</strong></p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-20082.png" alt="maven-helper-20082"></p>
+<p>A和B最终都依赖Z，此时A的声明（pom中引入的顺序）优先于B，则针对冲突的Z会优先引入Z(21.0)。</p>
+<p>如果Z(21.0)向下兼容Z(20.0)，则不会出现Jar包冲突问题。但如果将B声明放前面，则有可能会发生Jar包冲突</p>
+<h1 id="工程问题总结"><a href="#工程问题总结" class="headerlink" title="工程问题总结"></a>工程问题总结</h1><p>上面说的都是原理，可能大家更关心的是如下2个问题</p>
+<ol>
+<li><strong>我的项目中到底有没有依赖冲突?</strong></li>
+<li><strong>冲突是从哪里引入的?</strong></li>
+</ol>
+<h1 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h1><h2 id="方法1-maven-dependency-plugin-插件"><a href="#方法1-maven-dependency-plugin-插件" class="headerlink" title="方法1 maven-dependency-plugin 插件"></a>方法1 maven-dependency-plugin 插件</h2><p>maven-dependency-plugin插件可以打印依赖树，如果加上-Dverbose参数可以查看更详细的日志，当然也包括冲突的jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn dependency:tree -Dverbose</span><br></pre></td></tr></table></figure>
+
+<p><strong>但是很少有人告诉你该插件从3.0开始不再支持 -Dverbose 参数</strong>，所以即使加上该参数其也不会输出冲突的jar包，如果使用该参数会看到如下的日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Verbose not supported since maven-dependency-plugin 3.0</span><br></pre></td></tr></table></figure>
+
+<p>所以正确的命令是指定一个支持-Dverbose参数的版本，例如2.10版本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:tree -Dverbose &gt; tree.txt</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="方法2-IDEA-插件-Maven-Helper"><a href="#方法2-IDEA-插件-Maven-Helper" class="headerlink" title="方法2 IDEA 插件 Maven Helper"></a>方法2 IDEA 插件 Maven Helper</h2><p>在这里向大家推荐IDEA 解决Maven依赖冲突的高能神器 Maven Helper。</p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-7082.png" alt="maven-helper-7082"></p>
+<p>当你安装完该插件后,打开pom.xml 会看到一个 Dependency Analyzer 的标签页</p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-7069.png" alt="maven-helper-7069"></p>
+<p>其有三大功能,而且还提供搜索功能方便使用</p>
+<ol>
+<li>Conflicts（查看冲突）:可以很方便的看出哪些jar包冲突，其冲突是从哪些jar包引入的, 最终用的是哪个版本</li>
+<li>All Dependencies as List（列表形式查看所有依赖）</li>
+<li>All Dependencies as Tree（树形式查看所有依赖）</li>
+</ol>
+<h1 id="实践案例"><a href="#实践案例" class="headerlink" title="实践案例"></a>实践案例</h1><h2 id="案例1-log4j漏洞爆发后快速定位log4j-2-X的引入源头"><a href="#案例1-log4j漏洞爆发后快速定位log4j-2-X的引入源头" class="headerlink" title="案例1 log4j漏洞爆发后快速定位log4j-2.X的引入源头"></a>案例1 log4j漏洞爆发后快速定位log4j-2.X的引入源头</h2><p>2021年12月7日<code> log4j爆发了史诗级漏洞</code>，log4j这个再平常不过的jar包，如今却变成了洪水猛兽，只要工程中有log4j-2.X相关版本的jar包，都要立即清除，当时需要确认工程中是否引入了log4j-2.X版本，  我们确实没有在工程中显式引入log4j-2.X，但是最终的lib中确实有log4j-2.X相关的jar包。</p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-26949.png" alt="maven-helper-26949"></p>
+<p>我们希望能快速定位到是哪个依赖间接引入了log4j-2.X， 当时就借助了<code>Maven Helper</code>插件，很快定位到问题。</p>
+<p>如下可以看到是mybaits-spring-boot-starter这个依赖间接引入了log4j-2.X 相关的jar包</p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-24139.png" alt="maven-helper-24139"></p>
+<h2 id="案例2-引入-EasyExcel-引发-asm依赖冲突"><a href="#案例2-引入-EasyExcel-引发-asm依赖冲突" class="headerlink" title="案例2: 引入 EasyExcel 引发 asm依赖冲突"></a>案例2: 引入 EasyExcel 引发 asm依赖冲突</h2><p>项目中有excel导出功能，所以引入了EasyExcel， 当时希望将导出excel的功能封装到一个jar包里，但是在使用的过程中有报错，后来定位到问题与依赖冲突有关系。</p>
+<p>当时就借助<code>Maven Helper</code>插件， 可以看到spring-boot-starter-test 依赖asm 5.0.3， blue-web中通过easyexcel依赖asm 7.1， 而最终使用的asm的版本是通过spring-boot-starter-test 引入的， 定位到冲突的产生的根源后，我们很快解决了问题。</p>
+<p><img src="/2022/05/15/10-maven-helper/maven-helper-30182.png" alt="maven-helper-30182"></p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>理解冲突导致的原因并且快速定位到冲突源，是每个程序员的必修课，希望通过该文档的讲解能帮助到大家。</p>
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><strong>小马向前走</strong></p>
+<p><img src="/2022/05/15/10-maven-helper/qrcode-12cm.jpg" alt="qrcode-12cm"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/maven%EF%BC%8Cidea/" rel="tag"># maven，idea</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/02/24/09-restclient2/" rel="prev" title="为什么使用REST Client插件?">
+      <i class="fa fa-chevron-left"></i> 为什么使用REST Client插件?
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">背景说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">原理介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E4%BC%A0%E9%80%92"><span class="nav-number">2.1.</span> <span class="nav-text">依赖传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E8%B0%83%E8%A7%A3"><span class="nav-number">2.2.</span> <span class="nav-text">依赖调解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">工程问题总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">4.</span> <span class="nav-text">解决思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%951-maven-dependency-plugin-%E6%8F%92%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">方法1 maven-dependency-plugin 插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%952-IDEA-%E6%8F%92%E4%BB%B6-Maven-Helper"><span class="nav-number">4.2.</span> <span class="nav-text">方法2 IDEA 插件 Maven Helper</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E6%A1%88%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">实践案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B1-log4j%E6%BC%8F%E6%B4%9E%E7%88%86%E5%8F%91%E5%90%8E%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8Dlog4j-2-X%E7%9A%84%E5%BC%95%E5%85%A5%E6%BA%90%E5%A4%B4"><span class="nav-number">5.1.</span> <span class="nav-text">案例1 log4j漏洞爆发后快速定位log4j-2.X的引入源头</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B2-%E5%BC%95%E5%85%A5-EasyExcel-%E5%BC%95%E5%8F%91-asm%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81"><span class="nav-number">5.2.</span> <span class="nav-text">案例2: 引入 EasyExcel 引发 asm依赖冲突</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">maning</p>
+  <div class="site-description" itemprop="description">小马向前走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maning</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
