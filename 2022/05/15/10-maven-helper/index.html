@@ -36,7 +36,7 @@
 <meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/maven-helper-30182.png">
 <meta property="og:image" content="http://example.com/2022/05/15/10-maven-helper/qrcode-12cm.jpg">
 <meta property="article:published_time" content="2022-05-15T14:31:24.000Z">
-<meta property="article:modified_time" content="2022-05-15T22:07:23.348Z">
+<meta property="article:modified_time" content="2022-07-18T01:07:13.748Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="maven，idea">
 <meta name="twitter:card" content="summary">
@@ -205,7 +205,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-05-16 06:07:23" itemprop="dateModified" datetime="2022-05-16T06:07:23+08:00">2022-05-16</time>
+                <time title="Modified: 2022-07-18 09:07:13" itemprop="dateModified" datetime="2022-07-18T09:07:13+08:00">2022-07-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,7 +293,7 @@
 <h1 id="实践案例"><a href="#实践案例" class="headerlink" title="实践案例"></a>实践案例</h1><h2 id="案例1-log4j漏洞爆发后快速定位log4j-2-X的引入源头"><a href="#案例1-log4j漏洞爆发后快速定位log4j-2-X的引入源头" class="headerlink" title="案例1 log4j漏洞爆发后快速定位log4j-2.X的引入源头"></a>案例1 log4j漏洞爆发后快速定位log4j-2.X的引入源头</h2><p>2021年12月7日<code> log4j爆发了史诗级漏洞</code>，log4j这个再平常不过的jar包，如今却变成了洪水猛兽，只要工程中有log4j-2.X相关版本的jar包，都要立即清除，当时需要确认工程中是否引入了log4j-2.X版本，  我们确实没有在工程中显式引入log4j-2.X，但是最终的lib中确实有log4j-2.X相关的jar包。</p>
 <p><img src="/2022/05/15/10-maven-helper/maven-helper-26949.png" alt="maven-helper-26949"></p>
 <p>我们希望能快速定位到是哪个依赖间接引入了log4j-2.X， 当时就借助了<code>Maven Helper</code>插件，很快定位到问题。</p>
-<p>如下可以看到是mybaits-spring-boot-starter这个依赖间接引入了log4j-2.X 相关的jar包</p>
+<p>如下可以看到是mybatis-spring-boot-starter这个依赖间接引入了log4j-2.X 相关的jar包</p>
 <p><img src="/2022/05/15/10-maven-helper/maven-helper-24139.png" alt="maven-helper-24139"></p>
 <h2 id="案例2-引入-EasyExcel-引发-asm依赖冲突"><a href="#案例2-引入-EasyExcel-引发-asm依赖冲突" class="headerlink" title="案例2: 引入 EasyExcel 引发 asm依赖冲突"></a>案例2: 引入 EasyExcel 引发 asm依赖冲突</h2><p>项目中有excel导出功能，所以引入了EasyExcel， 当时希望将导出excel的功能封装到一个jar包里，但是在使用的过程中有报错，后来定位到问题与依赖冲突有关系。</p>
 <p>当时就借助<code>Maven Helper</code>插件， 可以看到spring-boot-starter-test 依赖asm 5.0.3， blue-web中通过easyexcel依赖asm 7.1， 而最终使用的asm的版本是通过spring-boot-starter-test 引入的， 定位到冲突的产生的根源后，我们很快解决了问题。</p>
