@@ -162,6 +162,85 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/11/11-string-joiner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/11/11-string-joiner/" class="post-title-link" itemprop="url">使用StringJoiner拼接字符串</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-03-11 20:14:46 / Modified: 20:15:43" itemprop="dateCreated datePublished" datetime="2023-03-11T20:14:46+08:00">2023-03-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>如果需要拼接分隔符， 如果你只会用 + 或者  StringBuilder/ StringBuffer 拼接字符串？那你就 OUT 了，建议使用 Java 8 中的这款拼接神器：StringJoiner，你值得拥有</p>
+<h1 id="代码片断"><a href="#代码片断" class="headerlink" title="代码片断"></a>代码片断</h1><p>原来的字符串拼接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String logStr=<span class="string">&quot;\n---------------------------------------------------------------------&quot;</span> +</span><br><span class="line">        <span class="string">&quot;\n请求ip:&quot;</span> + clientIp + <span class="string">&quot;:&quot;</span> + clientPort +</span><br><span class="line">        <span class="string">&quot;\n请求url:&quot;</span>+clientUrl+</span><br><span class="line">        <span class="string">&quot;\n请求方式:&quot;</span>+requestMethod+</span><br><span class="line">        <span class="string">&quot;\n执行时长:&quot;</span> + stopwatch.elapsed(TimeUnit.MILLISECONDS) + <span class="string">&quot;ms&quot;</span> +</span><br><span class="line">        <span class="string">&quot;\n入参:&quot;</span> + (args == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : Arrays.toString(args)) +</span><br><span class="line">        <span class="string">&quot;\n出参:&quot;</span> + (result == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : objectMapper.writeValueAsString(result))+</span><br><span class="line">        <span class="string">&quot;\n----------------------------------------------------------------------&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>使用 StringJoiner 之后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">StringJoiner stringJoiner &#x3D; new StringJoiner(&quot;\n&quot;);</span><br><span class="line">stringJoiner.add(&quot;&quot;);</span><br><span class="line">stringJoiner.add(&quot;---------------------------------------------------------------------&quot;);</span><br><span class="line">stringJoiner.add(&quot;请求ip:&quot; + clientIp + &quot;:&quot; + clientPort);</span><br><span class="line">stringJoiner.add(&quot;请求url:&quot;+clientUrl);</span><br><span class="line">stringJoiner.add(&quot;请求方式:&quot;+requestMethod);</span><br><span class="line">stringJoiner.add(&quot;执行时长:&quot;+stopwatch.elapsed(TimeUnit.MILLISECONDS) + &quot;ms&quot;);</span><br><span class="line">stringJoiner.add(&quot;入参:&quot; + (args &#x3D;&#x3D; null ? &quot;[]&quot; : Arrays.toString(args)));</span><br><span class="line">stringJoiner.add(&quot;出参:&quot; + (result &#x3D;&#x3D; null ? &quot;[]&quot; : objectMapper.writeValueAsString(result)));</span><br><span class="line">stringJoiner.add(&quot;----------------------------------------------------------------------&quot;);</span><br><span class="line">String logStr&#x3D;stringJoiner.toString();</span><br></pre></td></tr></table></figure>
+
+<p>不需要自己处理分隔符了，是不是清爽了很多? </p>
+<p>进一步研究源码就会发现 其实际上是对 StringBuilder 做了进一步的封装</p>
+<p><img src="/2023/03/11/11-string-joiner/stringJoiner-01.png" alt="stringJoiner-01"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/15/10-maven-helper/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1098,78 +1177,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/01-hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/01-hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-09-03 14:52:27" itemprop="dateCreated datePublished" datetime="2020-09-03T14:52:27+08:00">2020-09-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -1234,7 +1246,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1247,7 +1259,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1274,7 +1286,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2022</span>
+  <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
