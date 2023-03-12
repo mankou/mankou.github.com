@@ -185,10 +185,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-03-11 20:14:46 / Modified: 21:38:13" itemprop="dateCreated datePublished" datetime="2023-03-11T20:14:46+08:00">2023-03-11</time>
+              <time title="Created: 2023-03-11 20:14:46" itemprop="dateCreated datePublished" datetime="2023-03-11T20:14:46+08:00">2023-03-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-03-12 09:37:04" itemprop="dateModified" datetime="2023-03-12T09:37:04+08:00">2023-03-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -220,7 +226,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;---------------------------------------------------------------------&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求ip:&quot;</span> + clientIp + <span class="string">&quot;:&quot;</span> + clientPort);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求url:&quot;</span>+clientUrl);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求方式:&quot;</span>+requestMethod);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;执行时长:&quot;</span>+stopwatch.elapsed(TimeUnit.MILLISECONDS) + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;入参:&quot;</span> + (args == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : Arrays.toString(args)));</span><br><span class="line">stringJoiner.add(<span class="string">&quot;出参:&quot;</span> + (result == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : objectMapper.writeValueAsString(result)));</span><br><span class="line">stringJoiner.add(<span class="string">&quot;----------------------------------------------------------------------&quot;</span>);</span><br><span class="line">String logStr=stringJoiner.toString();</span><br></pre></td></tr></table></figure>
 
 <p>不需要自己处理分隔符了，是不是轻闲了不少? </p>
-<p>进一步研究源码就会发现 其实际上是对 StringBuilder 做了进一步的封装</p>
+<p>进一步研究源码就会发现，其实际上是对 StringBuilder 做了进一步的封装</p>
 <p><img src="/2023/03/11/11-string-joiner/stringJoiner-01.png" alt="stringJoiner-01"></p>
 
       
