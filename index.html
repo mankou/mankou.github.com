@@ -162,6 +162,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/06/12-vim-source/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/06/12-vim-source/" class="post-title-link" itemprop="url">vim-source</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-09-06 21:48:51 / Modified: 22:14:49" itemprop="dateCreated datePublished" datetime="2023-09-06T21:48:51+08:00">2023-09-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Vim是笔者最常用的一款文本编辑软件，几乎伴随着我学习linux的全过程， 是一款经过时间考验的工具</p>
+<p>本文介绍一个vim小技巧，<strong>临时加载配置</strong>。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>笔者在用vim处理文本时会临时定义一些快捷键，但不希望将这些快捷键定义在全局的配置文件.vimrc中，只是希望在某些场景下临时用一下，但是因为命令多又不想一个一个执行，有没有办法一次执行呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:map ,y :Bill&lt;CR&gt;</span><br><span class="line">:map ,l A 漏记&lt;ESC&gt;</span><br><span class="line">:map ,c :s/\s*漏记//&lt;CR&gt;</span><br><span class="line">:map ,c :s/\s*漏记.*$//&lt;CR&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p><strong>步骤1:</strong>  创建一个名为 <code>commands.vim</code> 的脚本文件，并将你的命令逐行写入其中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot; commands.vim</span><br><span class="line">map ，y :Bill&lt;CR&gt;</span><br><span class="line">map ，l A 漏记&lt;ESC&gt;</span><br><span class="line">map ，c :s&#x2F;\s*漏记&#x2F;&#x2F;&lt;CR&gt;</span><br><span class="line">map ，c :s&#x2F;\s*漏记.*$&#x2F;&#x2F;&lt;CR&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>步骤2:</strong>  打开 Vim 执行以下命令加载脚本文件中的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:source &#x2F;path&#x2F;to&#x2F;commands.vim</span><br></pre></td></tr></table></figure>
+
+
+
+<p>是不是挺高效? 比起很多“开箱即用”的编辑器，Vim 有一定的学习曲线，但是依然觉得值得。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/11/11-string-joiner/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1127,65 +1212,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/09/03/02-my-hello/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/03/02-my-hello/" class="post-title-link" itemprop="url">myHello</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-09-03 17:13:18 / Modified: 17:22:43" itemprop="dateCreated datePublished" datetime="2020-09-03T17:13:18+08:00">2020-09-03</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>兜兜转转, 又来到了这里, 欢迎回来</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1255,7 +1281,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1268,7 +1294,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
