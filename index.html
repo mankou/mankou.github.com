@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:48:16" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:52:07" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,7 +220,7 @@
 <h2 id="1-2-变量扩展"><a href="#1-2-变量扩展" class="headerlink" title="1.2 变量扩展"></a>1.2 变量扩展</h2><h3 id="1-2-1-模式扩展"><a href="#1-2-1-模式扩展" class="headerlink" title="1.2.1 模式扩展"></a>1.2.1 模式扩展</h3><h4 id="1-2-1-1-value-pattern"><a href="#1-2-1-1-value-pattern" class="headerlink" title="1.2.1.1 ${value#pattern}"></a>1.2.1.1 ${value#pattern}</h4><p>删除value中与pattern相匹配的部分，从左向右匹配</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value#*.&#125;</span><br><span class="line">输出 skygroup.com</span><br></pre></td></tr></table></figure>
 
-<h4 id="1-2-1-2-value-pattern"><a href="#1-2-1-2-value-pattern" class="headerlink" title="1.2.1.2  ${value##pattern}"></a>1.2.1.2  ${value##pattern}</h4><p>也是删除value中与pattern相匹配的部分，从左向右匹配<br>但是#与##的<strong>区别在于贪婪模式上</strong></p>
+<h4 id="1-2-1-2-value-pattern"><a href="#1-2-1-2-value-pattern" class="headerlink" title="1.2.1.2  ${value##pattern}"></a>1.2.1.2  ${value##pattern}</h4><p>也是删除value中与pattern相匹配的部分，从左向右匹配，但是#与##的<strong>区别在于贪婪模式上</strong></p>
 <ul>
 <li>#是非贪婪模式，也即最短匹配模式 lazy</li>
 <li>##是贪婪模式，也即最长匹配模式 greedy</li>
@@ -231,24 +231,21 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">value&#x3D;www.skygroup.com</span><br><span class="line">echo $&#123;value%.*&#125;</span><br><span class="line">输出 www.skygroup.</span><br><span class="line">注意因为是%是从右向左匹配，所以要写成.* 而不是*.</span><br></pre></td></tr></table></figure>
 
 
-<h4 id="1-2-1-4-value％％pattern"><a href="#1-2-1-4-value％％pattern" class="headerlink" title="1.2.1.4 ${value％％pattern}"></a>1.2.1.4 ${value％％pattern}</h4><p>也是删除value中与pattern相匹配的部分，从右向左匹配<br>%与%%的<strong>区别在于贪婪模式上</strong></p>
+<h4 id="1-2-1-4-value％％pattern"><a href="#1-2-1-4-value％％pattern" class="headerlink" title="1.2.1.4 ${value％％pattern}"></a>1.2.1.4 ${value％％pattern}</h4><p>也是删除value中与pattern相匹配的部分，从右向左匹配，%与%%的<strong>区别在于贪婪模式上</strong></p>
 <ul>
 <li>%是非贪婪模式，也即最短匹配模式 lazy</li>
 <li>%%是贪婪模式，也即最长匹配模式 greedy</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value%%.*&#125;</span><br><span class="line">输出 www</span><br></pre></td></tr></table></figure>
 
-
-
-<p><strong>总结</strong></p>
-<ul>
-<li>%表示从右向左匹配，%%表示从右向左贪婪匹配，删除位于%右侧通配符匹配的字符串</li>
+<h4 id="1-2-1-5-总结"><a href="#1-2-1-5-总结" class="headerlink" title="1.2.1.5 总结"></a>1.2.1.5 总结</h4><ul>
 <li>#表示从左到右匹配，##表示从左到右贪婪匹配，删除位于#右侧通配符匹配的字符串</li>
+<li>%表示从右向左匹配，%%表示从右向左贪婪匹配，删除位于%右侧通配符匹配的字符串</li>
 </ul>
 <p>记忆的方法为</p>
 <ul>
-<li>%是去掉右边（键盘上%在$的右边）</li>
 <li>#是去掉左边（键盘上#在$的左边）</li>
+<li>%是去掉右边（键盘上%在$的右边）</li>
 </ul>
 <h1 id="2-案例"><a href="#2-案例" class="headerlink" title="2. 案例"></a>2. 案例</h1><h2 id="2-1-长命令行选项"><a href="#2-1-长命令行选项" class="headerlink" title="2.1 长命令行选项"></a>2.1 长命令行选项</h2><p><strong>背景:</strong> 在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options)。短选项通常用于提供快速且紧凑的命令行选项，长命令行选项通常用于提供更具可读性和描述性的选项</p>
 <p>现在需要写一个shell脚本， 可同时支持短选项和长选项，具体使用方式如下。</p>
