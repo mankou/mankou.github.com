@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="1. 基础知识1.1 变量引用基本知识shell引用变量的基本格式 $&amp;#123;parameter&amp;#125;  如果parameter是数字，则是参数扩展 如果parameter是字符串，则是变量扩展 如果parameter是数组，遵循数组的扩展规则； parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的扩展  1.2 变量扩展1.2.1 模式扩展1.2.1.1 ${va">
+  <meta name="description" content="1. 基础知识1.1 变量引用基础知识shell引用变量的基本格式 $&amp;#123;parameter&amp;#125;  如果parameter是数字，则是参数扩展 如果parameter是字符串，则是变量扩展 如果parameter是数组，遵循数组的扩展规则； parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的扩展  1.2 变量扩展1.2.1 模式扩展1.2.1.1 ${va">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shell变量扩展">
 <meta property="og:url" content="http://example.com/2023/09/24/13-shell-parameter-expansion/index.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="1. 基础知识1.1 变量引用基本知识shell引用变量的基本格式 $&amp;#123;parameter&amp;#125;  如果parameter是数字，则是参数扩展 如果parameter是字符串，则是变量扩展 如果parameter是数组，遵循数组的扩展规则； parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的扩展  1.2 变量扩展1.2.1 模式扩展1.2.1.1 ${va">
+<meta property="og:description" content="1. 基础知识1.1 变量引用基础知识shell引用变量的基本格式 $&amp;#123;parameter&amp;#125;  如果parameter是数字，则是参数扩展 如果parameter是字符串，则是变量扩展 如果parameter是数组，遵循数组的扩展规则； parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的扩展  1.2 变量扩展1.2.1 模式扩展1.2.1.1 ${va">
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/2023/09/24/13-shell-parameter-expansion/qrcode-wechat-web.jpg">
 <meta property="article:published_time" content="2023-09-23T23:53:24.000Z">
-<meta property="article:modified_time" content="2023-09-24T04:45:26.187Z">
+<meta property="article:modified_time" content="2023-09-24T04:47:11.993Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:45:26" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:47:11" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,7 +215,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1. 基础知识"></a>1. 基础知识</h1><h2 id="1-1-变量引用基本知识"><a href="#1-1-变量引用基本知识" class="headerlink" title="1.1 变量引用基本知识"></a>1.1 变量引用基本知识</h2><p>shell引用变量的基本格式 <code>$&#123;parameter&#125;</code></p>
+        <h1 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1. 基础知识"></a>1. 基础知识</h1><h2 id="1-1-变量引用基础知识"><a href="#1-1-变量引用基础知识" class="headerlink" title="1.1 变量引用基础知识"></a>1.1 变量引用基础知识</h2><p>shell引用变量的基本格式 <code>$&#123;parameter&#125;</code></p>
 <ul>
 <li>如果parameter是数字，则是参数扩展</li>
 <li>如果parameter是字符串，则是变量扩展</li>
@@ -361,7 +361,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">1. 基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 变量引用基本知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%8F%98%E9%87%8F%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 变量扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-%E6%A8%A1%E5%BC%8F%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1 模式扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-1-value-pattern"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">1.2.1.1 ${value#pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-2-value-pattern"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">1.2.1.2  ${value##pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-3-value%EF%BC%85pattern"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">1.2.1.3 ${value％pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-4-value%EF%BC%85%EF%BC%85pattern"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">1.2.1.4 ${value％％pattern}</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">2. 案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E9%95%BF%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%80%89%E9%A1%B9"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 长命令行选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E8%8E%B7%E5%8F%96%E4%B8%8D%E5%B8%A6%E5%90%8E%E7%BC%80%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 获取不带后缀的文件名</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">1. 基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%8F%98%E9%87%8F%E5%BC%95%E7%94%A8%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 变量引用基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E5%8F%98%E9%87%8F%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 变量扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-%E6%A8%A1%E5%BC%8F%E6%89%A9%E5%B1%95"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1 模式扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-1-value-pattern"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">1.2.1.1 ${value#pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-2-value-pattern"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">1.2.1.2  ${value##pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-3-value%EF%BC%85pattern"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">1.2.1.3 ${value％pattern}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-4-value%EF%BC%85%EF%BC%85pattern"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">1.2.1.4 ${value％％pattern}</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B"><span class="nav-number">2.</span> <span class="nav-text">2. 案例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E9%95%BF%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%80%89%E9%A1%B9"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 长命令行选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E8%8E%B7%E5%8F%96%E4%B8%8D%E5%B8%A6%E5%90%8E%E7%BC%80%E7%9A%84%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 获取不带后缀的文件名</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
