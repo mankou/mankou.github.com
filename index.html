@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:47:45" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:48:16" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,7 +215,7 @@
 <li>如果parameter是数字，则是参数扩展</li>
 <li>如果parameter是字符串，则是变量扩展</li>
 <li>如果parameter是数组，遵循数组的扩展规则；</li>
-<li>parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的扩展</li>
+<li>parameter还可以是@ * #  ?  -等特殊参数，参考特殊参数的引用</li>
 </ul>
 <h2 id="1-2-变量扩展"><a href="#1-2-变量扩展" class="headerlink" title="1.2 变量扩展"></a>1.2 变量扩展</h2><h3 id="1-2-1-模式扩展"><a href="#1-2-1-模式扩展" class="headerlink" title="1.2.1 模式扩展"></a>1.2.1 模式扩展</h3><h4 id="1-2-1-1-value-pattern"><a href="#1-2-1-1-value-pattern" class="headerlink" title="1.2.1.1 ${value#pattern}"></a>1.2.1.1 ${value#pattern}</h4><p>删除value中与pattern相匹配的部分，从左向右匹配</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value#*.&#125;</span><br><span class="line">输出 skygroup.com</span><br></pre></td></tr></table></figure>
