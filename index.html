@@ -321,7 +321,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-24 23:00:45" itemprop="dateModified" datetime="2023-09-24T23:00:45+08:00">2023-09-24</time>
+                <time title="Modified: 2023-09-24 23:25:36" itemprop="dateModified" datetime="2023-09-24T23:25:36+08:00">2023-09-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -345,7 +345,8 @@
 
       
           <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>Vim是笔者最常用的一款文本编辑软件，几乎伴随着我学习linux的全过程， 是一款经过时间考验的工具</p>
-<p>本文介绍一个vim小技巧，<strong>临时加载配置</strong>。</p>
+<p>本文介绍一个vim小技巧，<strong>临时加载配置</strong> </p>
+<p>当时也是让笔者眼前一亮的技巧，因为笔者在实际工作中定义了很多快捷键，快捷键多了之后就会出现难以记忆而且相互冲突的问题，实际上这些快捷键不需要立即加载，只在某些场景下临时用一下即可，该技巧正好解决了笔者的痛点。</p>
 <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>笔者在用vim处理文本时会临时定义一些快捷键，但不希望将这些快捷键定义在全局的配置文件.vimrc中，只是希望在某些场景临时用一下，但是因为命令多又不想一个一个执行，有没有办法一次执行呢？</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:map ,y :Bill&lt;CR&gt;</span><br><span class="line">:map ,l A 漏记&lt;ESC&gt;</span><br><span class="line">:map ,c :s/\s*漏记.*$//&lt;CR&gt;</span><br></pre></td></tr></table></figure>
 
