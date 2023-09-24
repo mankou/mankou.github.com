@@ -162,6 +162,148 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/24/13-shell-parameter-expansion/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/24/13-shell-parameter-expansion/" class="post-title-link" itemprop="url">shell变量扩展</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:09:56" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/shell/" itemprop="url" rel="index"><span itemprop="name">shell</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1. 基础知识"></a>1. 基础知识</h1><h2 id="1-1-变量引用基本知识"><a href="#1-1-变量引用基本知识" class="headerlink" title="1.1 变量引用基本知识"></a>1.1 变量引用基本知识</h2><p>shell引用变量的基本格式 <code>$&#123;parameter&#125;</code></p>
+<ul>
+<li>如果parameter是数字，则是参数扩展</li>
+<li>如果parameter是字符串，则是变量扩展</li>
+<li>如果parameter是数组，遵循数组的扩展规则；</li>
+<li>parameter还可以是@, *, #, ?, -等，参考特殊参数的扩展</li>
+</ul>
+<h2 id="1-2-变量扩展"><a href="#1-2-变量扩展" class="headerlink" title="1.2 变量扩展"></a>1.2 变量扩展</h2><h3 id="1-2-1-模式扩展"><a href="#1-2-1-模式扩展" class="headerlink" title="1.2.1 模式扩展"></a>1.2.1 模式扩展</h3><p><code>$&#123;value#pattern&#125;</code></p>
+<p>删除value中与pattern相匹配的部分,从左向右匹配</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value#*.&#125;</span><br><span class="line">输出 skygroup.com</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>$&#123;value##pattern&#125;</code></p>
+<p>#与##的区别在于 </p>
+<ul>
+<li>#是非贪婪模式也即最短匹配模式</li>
+<li>##是贪婪模式也即最长匹配模式</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value##*.&#125;</span><br><span class="line">输出 com</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>$&#123;value％pattern&#125;</code></p>
+<p>删除value中与pattern相匹配的部分,但是是从右向左匹配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">value&#x3D;www.skygroup.com</span><br><span class="line">echo $&#123;value%.*&#125;</span><br><span class="line">输出 www.skygroup.</span><br><span class="line">注意因为是%是从右向左匹配,所以要写成.*,而不是*.</span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>$&#123;value％％pattern&#125;</code></p>
+<p>%与%%的区别在于 </p>
+<ul>
+<li>%是非贪婪模式也即最短匹配模式</li>
+<li>%%是贪婪模式也即最长匹配模式</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value%%.*&#125;</span><br><span class="line">输出 www</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>总结</strong></p>
+<ul>
+<li>%表示从右向左匹配，%%表示从右向左贪婪匹配。删除位于%右侧通配符匹配的字符串</li>
+<li>#表示从左到右匹配，##表示从左到右贪婪匹配。删除位于#右侧通配符匹配的字符串</li>
+</ul>
+<p>记忆的方法为</p>
+<ul>
+<li>%是去掉右边（键盘上% 在$的右边）</li>
+<li>#是 去掉左边（键盘上#在 $的左边）</li>
+</ul>
+<h1 id="2-案例"><a href="#2-案例" class="headerlink" title="2. 案例"></a>2. 案例</h1><h2 id="2-1-长命令行选项"><a href="#2-1-长命令行选项" class="headerlink" title="2.1 长命令行选项"></a>2.1 长命令行选项</h2><p><strong>背景:</strong> 在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options). 短选项通常用于提供快速且紧凑的命令行选项，长命令行选项通常用于提供更具可读性和描述性的选项</p>
+<p>现在需要写一个shell脚本, 可同时支持短选项和长选项,具体使用方式如下.</p>
+<ol>
+<li>短选项方式 <code>x.sh -s csv</code></li>
+<li>长选项方式 <code>x.sh --file-suffix=csv</code></li>
+</ol>
+<p>在shell中<code>getopts</code>可以很好的处理短选项,那如何处理长选项呢? </p>
+<p><strong>这时就用到上面讲到模式扩展的知识点 <code>$&#123;value#pattern&#125;</code></strong></p>
+<p>完整代码片断如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 解析命令行选项</span></span><br><span class="line">while getopts &quot;s:vh-:&quot; opt; do</span><br><span class="line">  case $opt in</span><br><span class="line">    s)</span><br><span class="line">        file_suffix=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">    -)</span><br><span class="line">      case &quot;$&#123;OPTARG&#125;&quot; in</span><br><span class="line">        file-suffix=*)</span><br><span class="line">          file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br><span class="line">          ;;</span><br><span class="line">        *)</span><br><span class="line">          echo &quot;unknown option: --$OPTARG&quot; &gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">          ;;</span><br><span class="line">      esac</span><br><span class="line">      ;;</span><br><span class="line">    \?)</span><br><span class="line">      echo &quot;unknown option: -$OPTARG&quot; &gt;&amp;2</span><br><span class="line">      exit 1</span><br><span class="line">      ;;</span><br><span class="line">  esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+
+
+<p>假设执行的命令是<code>x.sh --file-suffix=csv</code>,我们需要从 –file-suffix=csv 中解析出选项值csv,这时就用到了<strong>模式扩展</strong>的知识点,核心代码片断如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-2-获取不带后缀的文件名"><a href="#2-2-获取不带后缀的文件名" class="headerlink" title="2.2 获取不带后缀的文件名"></a>2.2 获取不带后缀的文件名</h2><p>如下获取到的文件名是 x.sh,我希望从x.sh中提取出不带后缀名的文件名. 这时就用到了<strong>模式扩展</strong>的知识点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SHELL_NAME=x.sh</span><br><span class="line">SHELL_NAME0=$&#123;SHELL_NAME%.*&#125;</span><br><span class="line">echo $&#123;SHELL_NAME0&#125;</span><br><span class="line"></span><br><span class="line">输出</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><img src="/2023/09/24/13-shell-parameter-expansion/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/06/12-vim-source/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1136,91 +1278,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/08/03-commons-text-usage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/08/03-commons-text-usage/" class="post-title-link" itemprop="url">使用commons-text 进行占位符替换</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-08 14:36:02" itemprop="dateCreated datePublished" datetime="2020-10-08T14:36:02+08:00">2020-10-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-19 11:38:43" itemprop="dateModified" datetime="2020-10-19T11:38:43+08:00">2020-10-19</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="背景描述"><a href="#背景描述" class="headerlink" title="背景描述"></a>背景描述</h1><p>日常开发工作中会遇到替换占位符的需求</p>
-<p>例如给用户发验证码短信时需要拼接如下的字符串   “张三 欢迎使用,您的验证码是123456” , 其中用户名和验证码需要动态拼接,其他字符串都是固定的.  则这种情况下可以考虑使用commons-text,比自己实现字符串替换要好.</p>
-<h1 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h1><p>引入 commons-text 的依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-text<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>具体代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        * 演示最简单的使用方式</span></span><br><span class="line"><span class="comment">        * 这里默认的替换符就是$&#123;&#125;</span></span><br><span class="line"><span class="comment">        * */</span></span><br><span class="line">        Map&lt;String, Object&gt; params = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">        params.put(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        params.put(<span class="string">&quot;captcha&quot;</span>, <span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        StringSubstitutor stringSubstitutor=<span class="keyword">new</span> StringSubstitutor(params);</span><br><span class="line">        String template = <span class="string">&quot;$&#123;userName&#125; 欢迎使用,您的验证码是$&#123;captcha&#125;&quot;</span>;</span><br><span class="line">        String result=stringSubstitutor.replace(template);</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1290,20 +1347,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
