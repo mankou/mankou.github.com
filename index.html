@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:59:05" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 13:00:57" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -254,7 +254,7 @@
 <li>长选项方式 <code>x.sh --file-suffix=csv</code></li>
 </ol>
 <p>在shell中<code>getopts</code>可以很好的处理短选项，那如何处理长选项呢? </p>
-<p><strong>这里介绍其中一种思路，需要用到上面讲的模式扩展的知识点 <code>$&#123;value#pattern&#125;</code></strong></p>
+<p><strong>这里介绍其中一种思路，需要用到上面讲的变量扩展中关于模式扩展的知识点 <code>$&#123;value#pattern&#125;</code></strong></p>
 <p>完整代码片断如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 解析命令行选项</span></span><br><span class="line">while getopts &quot;s:vh-:&quot; opt; do</span><br><span class="line">  case $opt in</span><br><span class="line">    s)</span><br><span class="line">        file_suffix=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">    -)</span><br><span class="line">      case &quot;$&#123;OPTARG&#125;&quot; in</span><br><span class="line">        file-suffix=*)</span><br><span class="line">          file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br><span class="line">          ;;</span><br><span class="line">        *)</span><br><span class="line">          echo &quot;unknown option: --$OPTARG&quot; &gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">          ;;</span><br><span class="line">      esac</span><br><span class="line">      ;;</span><br><span class="line">    \?)</span><br><span class="line">      echo &quot;unknown option: -$OPTARG&quot; &gt;&amp;2</span><br><span class="line">      exit 1</span><br><span class="line">      ;;</span><br><span class="line">  esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
 
