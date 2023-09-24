@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:09:56" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:28:02" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -215,35 +215,33 @@
 <li>如果parameter是数字，则是参数扩展</li>
 <li>如果parameter是字符串，则是变量扩展</li>
 <li>如果parameter是数组，遵循数组的扩展规则；</li>
-<li>parameter还可以是@, *, #, ?, -等，参考特殊参数的扩展</li>
+<li>parameter还可以是@ * #  ?  -等，参考特殊参数的扩展</li>
 </ul>
-<h2 id="1-2-变量扩展"><a href="#1-2-变量扩展" class="headerlink" title="1.2 变量扩展"></a>1.2 变量扩展</h2><h3 id="1-2-1-模式扩展"><a href="#1-2-1-模式扩展" class="headerlink" title="1.2.1 模式扩展"></a>1.2.1 模式扩展</h3><p><code>$&#123;value#pattern&#125;</code></p>
-<p>删除value中与pattern相匹配的部分,从左向右匹配</p>
+<h2 id="1-2-变量扩展"><a href="#1-2-变量扩展" class="headerlink" title="1.2 变量扩展"></a>1.2 变量扩展</h2><h3 id="1-2-1-模式扩展"><a href="#1-2-1-模式扩展" class="headerlink" title="1.2.1 模式扩展"></a>1.2.1 模式扩展</h3><h4 id="1-2-1-1-value-pattern"><a href="#1-2-1-1-value-pattern" class="headerlink" title="1.2.1.1 ${value#pattern}`"></a>1.2.1.1 ${value#pattern}`</h4><p>删除value中与pattern相匹配的部分，从左向右匹配</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value#*.&#125;</span><br><span class="line">输出 skygroup.com</span><br></pre></td></tr></table></figure>
 
 
 
-<p><code>$&#123;value##pattern&#125;</code></p>
-<p>#与##的区别在于 </p>
+<h4 id="1-2-1-2-value-pattern"><a href="#1-2-1-2-value-pattern" class="headerlink" title="1.2.1.2  ${value##pattern}`"></a>1.2.1.2  ${value##pattern}`</h4><p>也是删除value中与pattern相匹配的部分，从左向右匹配</p>
+<p>但是#与##的<strong>区别在于贪婪模式上</strong></p>
 <ul>
-<li>#是非贪婪模式也即最短匹配模式</li>
-<li>##是贪婪模式也即最长匹配模式</li>
+<li>#是非贪婪模式，也即最短匹配模式</li>
+<li>##是贪婪模式，也即最长匹配模式</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value##*.&#125;</span><br><span class="line">输出 com</span><br></pre></td></tr></table></figure>
 
 
 
-<p><code>$&#123;value％pattern&#125;</code></p>
-<p>删除value中与pattern相匹配的部分,但是是从右向左匹配</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">value&#x3D;www.skygroup.com</span><br><span class="line">echo $&#123;value%.*&#125;</span><br><span class="line">输出 www.skygroup.</span><br><span class="line">注意因为是%是从右向左匹配,所以要写成.*,而不是*.</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-1-3-value％pattern"><a href="#1-2-1-3-value％pattern" class="headerlink" title="1.2.1.3 ${value％pattern}"></a>1.2.1.3 <code>$&#123;value％pattern&#125;</code></h4><p>删除value中与pattern相匹配的部分，但是是从右向左匹配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">value&#x3D;www.skygroup.com</span><br><span class="line">echo $&#123;value%.*&#125;</span><br><span class="line">输出 www.skygroup.</span><br><span class="line">注意因为是%是从右向左匹配，所以要写成.* 而不是*.</span><br></pre></td></tr></table></figure>
 
 
 
-<p><code>$&#123;value％％pattern&#125;</code></p>
-<p>%与%%的区别在于 </p>
+<h4 id="1-2-1-4-value％％pattern"><a href="#1-2-1-4-value％％pattern" class="headerlink" title="1.2.1.4  ${value％％pattern}"></a>1.2.1.4  <code>$&#123;value％％pattern&#125;</code></h4><p>也是删除value中与pattern相匹配的部分，从右向左匹配</p>
+<p>%与%%的区别在于贪婪模式上</p>
 <ul>
-<li>%是非贪婪模式也即最短匹配模式</li>
-<li>%%是贪婪模式也即最长匹配模式</li>
+<li>%是非贪婪模式，也即最短匹配模式</li>
+<li>%%是贪婪模式，也即最长匹配模式</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value%%.*&#125;</span><br><span class="line">输出 www</span><br></pre></td></tr></table></figure>
 
@@ -251,33 +249,33 @@
 
 <p><strong>总结</strong></p>
 <ul>
-<li>%表示从右向左匹配，%%表示从右向左贪婪匹配。删除位于%右侧通配符匹配的字符串</li>
-<li>#表示从左到右匹配，##表示从左到右贪婪匹配。删除位于#右侧通配符匹配的字符串</li>
+<li>%表示从右向左匹配，%%表示从右向左贪婪匹配，删除位于%右侧通配符匹配的字符串</li>
+<li>#表示从左到右匹配，##表示从左到右贪婪匹配，删除位于#右侧通配符匹配的字符串</li>
 </ul>
 <p>记忆的方法为</p>
 <ul>
 <li>%是去掉右边（键盘上% 在$的右边）</li>
 <li>#是 去掉左边（键盘上#在 $的左边）</li>
 </ul>
-<h1 id="2-案例"><a href="#2-案例" class="headerlink" title="2. 案例"></a>2. 案例</h1><h2 id="2-1-长命令行选项"><a href="#2-1-长命令行选项" class="headerlink" title="2.1 长命令行选项"></a>2.1 长命令行选项</h2><p><strong>背景:</strong> 在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options). 短选项通常用于提供快速且紧凑的命令行选项，长命令行选项通常用于提供更具可读性和描述性的选项</p>
-<p>现在需要写一个shell脚本, 可同时支持短选项和长选项,具体使用方式如下.</p>
+<h1 id="2-案例"><a href="#2-案例" class="headerlink" title="2. 案例"></a>2. 案例</h1><h2 id="2-1-长命令行选项"><a href="#2-1-长命令行选项" class="headerlink" title="2.1 长命令行选项"></a>2.1 长命令行选项</h2><p><strong>背景:</strong> 在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options)。短选项通常用于提供快速且紧凑的命令行选项，长命令行选项通常用于提供更具可读性和描述性的选项</p>
+<p>现在需要写一个shell脚本， 可同时支持短选项和长选项，具体使用方式如下。</p>
 <ol>
 <li>短选项方式 <code>x.sh -s csv</code></li>
 <li>长选项方式 <code>x.sh --file-suffix=csv</code></li>
 </ol>
-<p>在shell中<code>getopts</code>可以很好的处理短选项,那如何处理长选项呢? </p>
-<p><strong>这时就用到上面讲到模式扩展的知识点 <code>$&#123;value#pattern&#125;</code></strong></p>
+<p>在shell中<code>getopts</code>可以很好的处理短选项，那如何处理长选项呢? </p>
+<p><strong>这时就需要用到上面讲到模式扩展的知识点 <code>$&#123;value#pattern&#125;</code></strong></p>
 <p>完整代码片断如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 解析命令行选项</span></span><br><span class="line">while getopts &quot;s:vh-:&quot; opt; do</span><br><span class="line">  case $opt in</span><br><span class="line">    s)</span><br><span class="line">        file_suffix=&quot;$OPTARG&quot;</span><br><span class="line">        ;;</span><br><span class="line">    -)</span><br><span class="line">      case &quot;$&#123;OPTARG&#125;&quot; in</span><br><span class="line">        file-suffix=*)</span><br><span class="line">          file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br><span class="line">          ;;</span><br><span class="line">        *)</span><br><span class="line">          echo &quot;unknown option: --$OPTARG&quot; &gt;&amp;2</span><br><span class="line">          exit 1</span><br><span class="line">          ;;</span><br><span class="line">      esac</span><br><span class="line">      ;;</span><br><span class="line">    \?)</span><br><span class="line">      echo &quot;unknown option: -$OPTARG&quot; &gt;&amp;2</span><br><span class="line">      exit 1</span><br><span class="line">      ;;</span><br><span class="line">  esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
 
 
 
-<p>假设执行的命令是<code>x.sh --file-suffix=csv</code>,我们需要从 –file-suffix=csv 中解析出选项值csv,这时就用到了<strong>模式扩展</strong>的知识点,核心代码片断如下</p>
+<p>假设执行的命令是<code>x.sh --file-suffix=csv</code>，我们需要从 –file-suffix=csv 中解析出选项值csv，这里就用到了<strong>模式扩展</strong>的知识点</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="2-2-获取不带后缀的文件名"><a href="#2-2-获取不带后缀的文件名" class="headerlink" title="2.2 获取不带后缀的文件名"></a>2.2 获取不带后缀的文件名</h2><p>如下获取到的文件名是 x.sh,我希望从x.sh中提取出不带后缀名的文件名. 这时就用到了<strong>模式扩展</strong>的知识点</p>
+<h2 id="2-2-获取不带后缀的文件名"><a href="#2-2-获取不带后缀的文件名" class="headerlink" title="2.2 获取不带后缀的文件名"></a>2.2 获取不带后缀的文件名</h2><p>如下获取到的文件名是 x.sh，我希望从x.sh中提取出不带后缀名的文件名. 这时就用到了<strong>模式扩展</strong>的知识点</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SHELL_NAME=x.sh</span><br><span class="line">SHELL_NAME0=$&#123;SHELL_NAME%.*&#125;</span><br><span class="line">echo $&#123;SHELL_NAME0&#125;</span><br><span class="line"></span><br><span class="line">输出</span><br><span class="line">x</span><br></pre></td></tr></table></figure>
 
 
