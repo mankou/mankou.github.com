@@ -29,7 +29,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/2023/09/24/13-shell-parameter-expansion/qrcode-wechat-web.jpg">
 <meta property="article:published_time" content="2023-09-23T23:53:24.000Z">
-<meta property="article:modified_time" content="2023-09-24T04:34:27.245Z">
+<meta property="article:modified_time" content="2023-09-24T04:38:55.401Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
@@ -192,7 +192,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:34:27" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
+              <time title="Created: 2023-09-24 07:53:24 / Modified: 12:38:55" itemprop="dateCreated datePublished" datetime="2023-09-24T07:53:24+08:00">2023-09-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,8 +230,8 @@
 <h4 id="1-2-1-2-value-pattern"><a href="#1-2-1-2-value-pattern" class="headerlink" title="1.2.1.2  ${value##pattern}"></a>1.2.1.2  ${value##pattern}</h4><p>也是删除value中与pattern相匹配的部分，从左向右匹配</p>
 <p>但是#与##的<strong>区别在于贪婪模式上</strong></p>
 <ul>
-<li>#是非贪婪模式，也即最短匹配模式</li>
-<li>##是贪婪模式，也即最长匹配模式</li>
+<li>#是非贪婪模式，也即最短匹配模式 lazy</li>
+<li>##是贪婪模式，也即最长匹配模式 greedy</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value##*.&#125;</span><br><span class="line">输出 com</span><br></pre></td></tr></table></figure>
 
@@ -245,8 +245,8 @@
 <h4 id="1-2-1-4-value％％pattern"><a href="#1-2-1-4-value％％pattern" class="headerlink" title="1.2.1.4 ${value％％pattern}"></a>1.2.1.4 ${value％％pattern}</h4><p>也是删除value中与pattern相匹配的部分，从右向左匹配</p>
 <p>%与%%的区别在于贪婪模式上</p>
 <ul>
-<li>%是非贪婪模式，也即最短匹配模式</li>
-<li>%%是贪婪模式，也即最长匹配模式</li>
+<li>%是非贪婪模式，也即最短匹配模式 lazy</li>
+<li>%%是贪婪模式，也即最长匹配模式 greedy</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value%%.*&#125;</span><br><span class="line">输出 www</span><br></pre></td></tr></table></figure>
 
