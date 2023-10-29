@@ -20,23 +20,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="简述在拼接字符串的过程中有时需要拼接分隔符， 如果你只会用 + 或者  StringBuilder&#x2F; StringBuffer 拼接字符串？那你就 OUT 了，建议使用 Java 8 中的这款字符串拼接神器：StringJoiner，你值得拥有。 代码片断原来的字符串拼接代码 12345678String logStr&#x3D;&quot;\n-------------------------------">
+  <meta name="description" content="引言本文分享一个shell脚本中处理命令行选项的小技巧，我看到项目中许多shell脚本没有处理命令行参数这部分内容，这也是导致我们写的shell脚本不够灵活，不能抽取成可复用脚本的原因之一。 引出问题在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options)  短命令行选项通常用于提供快速且紧凑的命令行选项 长命令行选项通常用于提供更具可读">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用StringJoiner拼接字符串">
-<meta property="og:url" content="http://example.com/2023/03/11/11-string-joiner/index.html">
+<meta property="og:title" content="shell 处理长命令行选项">
+<meta property="og:url" content="http://example.com/2023/10/29/14-shell-long-options/index.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="简述在拼接字符串的过程中有时需要拼接分隔符， 如果你只会用 + 或者  StringBuilder&#x2F; StringBuffer 拼接字符串？那你就 OUT 了，建议使用 Java 8 中的这款字符串拼接神器：StringJoiner，你值得拥有。 代码片断原来的字符串拼接代码 12345678String logStr&#x3D;&quot;\n-------------------------------">
+<meta property="og:description" content="引言本文分享一个shell脚本中处理命令行选项的小技巧，我看到项目中许多shell脚本没有处理命令行参数这部分内容，这也是导致我们写的shell脚本不够灵活，不能抽取成可复用脚本的原因之一。 引出问题在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options)  短命令行选项通常用于提供快速且紧凑的命令行选项 长命令行选项通常用于提供更具可读">
 <meta property="og:locale">
-<meta property="og:image" content="http://example.com/2023/03/11/11-string-joiner/stringJoiner-01.png">
-<meta property="og:image" content="http://example.com/2023/03/11/11-string-joiner/qrcode-wechat-web.jpg">
-<meta property="article:published_time" content="2023-03-11T12:14:46.000Z">
-<meta property="article:modified_time" content="2023-03-18T14:28:29.904Z">
+<meta property="og:image" content="http://example.com/2023/10/29/14-shell-long-options/getopts-long-options.png">
+<meta property="og:image" content="http://example.com/2023/10/29/14-shell-long-options/qrcode-wechat-web.jpg">
+<meta property="article:published_time" content="2023-10-29T13:21:29.000Z">
+<meta property="article:modified_time" content="2023-10-29T13:30:53.585Z">
 <meta property="article:author" content="maning">
-<meta property="article:tag" content="String">
+<meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2023/03/11/11-string-joiner/stringJoiner-01.png">
+<meta name="twitter:image" content="http://example.com/2023/10/29/14-shell-long-options/getopts-long-options.png">
 
-<link rel="canonical" href="http://example.com/2023/03/11/11-string-joiner/">
+<link rel="canonical" href="http://example.com/2023/10/29/14-shell-long-options/">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>使用StringJoiner拼接字符串 | 小马向前走</title>
+  <title>shell 处理长命令行选项 | 小马向前走</title>
   
 
 
@@ -169,7 +169,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/11/11-string-joiner/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/29/14-shell-long-options/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -182,7 +182,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          使用StringJoiner拼接字符串
+          shell 处理长命令行选项
         </h1>
 
         <div class="post-meta">
@@ -191,23 +191,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-03-11 20:14:46" itemprop="dateCreated datePublished" datetime="2023-03-11T20:14:46+08:00">2023-03-11</time>
+              <time title="Created: 2023-10-29 21:21:29 / Modified: 21:30:53" itemprop="dateCreated datePublished" datetime="2023-10-29T21:21:29+08:00">2023-10-29</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-18 22:28:29" itemprop="dateModified" datetime="2023-03-18T22:28:29+08:00">2023-03-18</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/categories/shell/" itemprop="url" rel="index"><span itemprop="name">shell</span></a>
                 </span>
             </span>
 
@@ -222,21 +216,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h1><p>在拼接字符串的过程中有时需要拼接分隔符， 如果你只会用 + 或者  StringBuilder/ StringBuffer 拼接字符串？那你就 OUT 了，建议使用 Java 8 中的这款字符串拼接神器：<strong>StringJoiner，你值得拥有</strong>。</p>
-<h1 id="代码片断"><a href="#代码片断" class="headerlink" title="代码片断"></a>代码片断</h1><p>原来的字符串拼接代码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String logStr=<span class="string">&quot;\n---------------------------------------------------------------------&quot;</span> +</span><br><span class="line">        <span class="string">&quot;\n请求ip:&quot;</span> + clientIp + <span class="string">&quot;:&quot;</span> + clientPort +</span><br><span class="line">        <span class="string">&quot;\n请求url:&quot;</span>+clientUrl+</span><br><span class="line">        <span class="string">&quot;\n请求方式:&quot;</span>+requestMethod+</span><br><span class="line">        <span class="string">&quot;\n执行时长:&quot;</span> + stopwatch.elapsed(TimeUnit.MILLISECONDS) + <span class="string">&quot;ms&quot;</span> +</span><br><span class="line">        <span class="string">&quot;\n入参:&quot;</span> + (args == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : Arrays.toString(args)) +</span><br><span class="line">        <span class="string">&quot;\n出参:&quot;</span> + (result == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : objectMapper.writeValueAsString(result))+</span><br><span class="line">        <span class="string">&quot;\n----------------------------------------------------------------------&quot;</span>;</span><br></pre></td></tr></table></figure>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>本文分享一个shell脚本中处理命令行选项的小技巧，我看到项目中许多shell脚本没有处理命令行参数这部分内容，这也是导致我们写的shell脚本不够灵活，不能抽取成可复用脚本的原因之一。</p>
+<h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>在命令行中通常有两种类型的选项：短命令行选项(short options)和长命令行选项(long options)</p>
+<ul>
+<li>短命令行选项通常用于提供快速且紧凑的命令行选项</li>
+<li>长命令行选项通常用于提供更具可读性和描述性的选项</li>
+</ul>
+<p>现在需要写一个shell脚本， 可同时支持短选项和长选项，写好后使用方式如下：</p>
+<ul>
+<li>短选项方式 <code>x.sh -s csv</code></li>
+<li>长选项方式 <code>x.sh --file-suffix=csv</code></li>
+</ul>
+<p>在shell中getopts可以很好的处理短选项，那如何处理长选项呢? </p>
+<h1 id="基础知识铺垫"><a href="#基础知识铺垫" class="headerlink" title="基础知识铺垫"></a>基础知识铺垫</h1><p>在解决这个问题之前先做一个基础知识的铺垫</p>
+<p>如下的代码，只要写过shell脚本的同学都知道，是引用变量的值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">&#123;value｝</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p>使用 StringJoiner 之后</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;---------------------------------------------------------------------&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求ip:&quot;</span> + clientIp + <span class="string">&quot;:&quot;</span> + clientPort);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求url:&quot;</span>+clientUrl);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;请求方式:&quot;</span>+requestMethod);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;执行时长:&quot;</span>+stopwatch.elapsed(TimeUnit.MILLISECONDS) + <span class="string">&quot;ms&quot;</span>);</span><br><span class="line">stringJoiner.add(<span class="string">&quot;入参:&quot;</span> + (args == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : Arrays.toString(args)));</span><br><span class="line">stringJoiner.add(<span class="string">&quot;出参:&quot;</span> + (result == <span class="keyword">null</span> ? <span class="string">&quot;[]&quot;</span> : objectMapper.writeValueAsString(result)));</span><br><span class="line">stringJoiner.add(<span class="string">&quot;----------------------------------------------------------------------&quot;</span>);</span><br><span class="line">String logStr=stringJoiner.toString();</span><br></pre></td></tr></table></figure>
+<p>再进一步理解如下的代码，其使用了一种叫<strong>变量扩展</strong>的知识点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">&#123;value<span class="comment">#pattern&#125;</span></span></span><br></pre></td></tr></table></figure>
 
-<p>不需要自己处理分隔符了，是不是轻闲了不少? </p>
-<p>进一步研究源码就会发现，其实际上是对 StringBuilder 做了进一步的封装</p>
-<p><img src="/2023/03/11/11-string-joiner/stringJoiner-01.png" alt="stringJoiner-01"></p>
+
+
+<p>其返回的不是value变量的值，而是一个替换后的值。那又是如何替换的呢？删除value中与pattern相匹配的部分，从左向右匹配</p>
+<p>举个例子</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value=www.skygroup.com</span><br><span class="line">echo $&#123;value#*.&#125;</span><br><span class="line">输出 skygroup.com</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><p>再回到最开始的问题，我们要写一个shell脚本可同时支持短选项和长选项两种风格的命令行参数，这里介绍其中一种思路，通过getopts命令结合上面讲的变量扩展的知识点解决解析命令行长选项的问题。</p>
+<p>有了刚才基础知识的铺垫，下面看一段更完整的代码片断</p>
+<p><img src="/2023/10/29/14-shell-long-options/getopts-long-options.png" alt="getopts-long-options"></p>
+<p>假设执行的命令是 <code>x.sh --file-suffix=csv``，我们需要从命令行选项--file-suffix=csv</code>中解析出具体的值csv，这里就用到了<code>$&#123;value#pattern&#125;</code>的知识点，关键代码如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file_suffix=&quot;$&#123;OPTARG#*=&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>本文从实际工作场景出发介绍了笔者在写shell脚本时处理命令行选项，特别是长命令行选项的思路。能够处理命令行参数才能使我们的脚本更灵活，在工作中也更容易抽取出可复用的核心脚本。</p>
+<p>其中涉及到变量扩展的知识点，因为篇幅限制没有展开细讲，笔者在博客中专门写了一篇关于<strong>shell变量扩展</strong>的文章，有兴趣的读者可参考。</p>
 <hr>
 <p>微信端的朋友也可关注我的公众号</p>
-<p><img src="/2023/03/11/11-string-joiner/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+<p><img src="/2023/10/29/14-shell-long-options/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
 
     </div>
 
@@ -246,7 +267,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/String/" rel="tag"># String</a>
+              <a href="/tags/shell/" rel="tag"># shell</a>
           </div>
 
         
@@ -255,13 +276,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/05/15/10-maven-helper/" rel="prev" title="maven jar包冲突的原理及解决办法">
-      <i class="fa fa-chevron-left"></i> maven jar包冲突的原理及解决办法
+    <a href="/2023/09/24/13-shell-parameter-expansion/" rel="prev" title="shell变量扩展">
+      <i class="fa fa-chevron-left"></i> shell变量扩展
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/09/06/12-vim-source/" rel="next" title="vim 临时加载配置">
-      vim 临时加载配置 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -320,7 +338,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">简述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%89%87%E6%96%AD"><span class="nav-number">2.</span> <span class="nav-text">代码片断</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E5%87%BA%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">引出问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E9%93%BA%E5%9E%AB"><span class="nav-number">3.</span> <span class="nav-text">基础知识铺垫</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
