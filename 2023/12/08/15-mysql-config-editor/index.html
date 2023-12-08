@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://example.com/2023/12/08/15-mysql-config-editor/warning-insecure.png">
 <meta property="og:image" content="http://example.com/2023/12/08/15-mysql-config-editor/qrcode-wechat-web.jpg">
 <meta property="article:published_time" content="2023-12-08T08:32:16.000Z">
-<meta property="article:modified_time" content="2023-12-08T09:01:21.454Z">
+<meta property="article:modified_time" content="2023-12-08T09:16:26.893Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="mysql">
 <meta property="article:tag" content="shell">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-12-08 16:32:16 / Modified: 17:01:21" itemprop="dateCreated datePublished" datetime="2023-12-08T16:32:16+08:00">2023-12-08</time>
+              <time title="Created: 2023-12-08 16:32:16 / Modified: 17:16:26" itemprop="dateCreated datePublished" datetime="2023-12-08T16:32:16+08:00">2023-12-08</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,14 +239,15 @@
 <h2 id="思路2-MySQL-安全登陆工具-mysql-config-editor"><a href="#思路2-MySQL-安全登陆工具-mysql-config-editor" class="headerlink" title="思路2  MySQL 安全登陆工具 mysql_config_editor"></a>思路2  MySQL 安全登陆工具 mysql_config_editor</h2><p><code>mysql_config_editor</code> 是MySQL自带的一款用于安全加密登录的工具，可以在一些场合避免使用明文密码。</p>
 <p>例如写shell脚本时不用再为将密码明文写在脚本里而纠结；另外如果使用mysql命令登录数据库也可以避免每次都要输入一堆参数。</p>
 <p><strong>具体使用方式</strong></p>
-<ol>
-<li>先用 mysql_config_editor 添加一个login-path</li>
-<li>连接数据库时指定login-path 不再需要指定登录信息</li>
-</ol>
-<p><strong>步骤1:</strong> 先用 mysql_config_editor 添加一个login-path</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G xx-pbc -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
+<p><strong>步骤1:</strong> 先用 <code>mysql_config_editor</code> 添加一个login-path</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G your_login_path -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
 
-<p>该命令用mysql_config_editor创建一个MySQL密钥，将登录MySQL的 username、password、port等参数加密存入文件中，回车后会让你输入密码，之后会在当前用户目录下生成一个隐藏文件<code>.mylogin.cnf</code> ，其可作为连接MySQL服务器的认证凭证，以后在命令行或者脚本中使用可免于输入明文密码，安全方便。</p>
+<ol>
+<li>该命令用<code>mysql_config_editor</code>创建一个MySQL密钥</li>
+<li>其将登录MySQL的 username、password、port等参数加密存入文件中</li>
+<li>最终会在当前用户目录下生成一个隐藏文件<code>.mylogin.cnf</code> </li>
+<li>其可作为连接MySQL服务器的认证凭证，以后在命令行或者脚本中使用可免于输入明文密码，安全方便。</li>
+</ol>
 <p><strong>步骤2:</strong> 连接数据库时指定login-path不需要再指定登录信息</p>
 <p>如下演示2个使用 –login-path 参数的命令</p>
 <p>登录mysql</p>
