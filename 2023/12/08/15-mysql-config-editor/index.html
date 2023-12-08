@@ -20,17 +20,17 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="引出问题做数据加工的同学经常需要通过shell脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。 1mysql -h$&amp;#123;YOUR_HOST&amp;#125;  -P$&amp;#123;YOUR_PORT&amp;#125; -u$&amp;#123;YOUR_USER&amp;#125; -p$&amp;#123;YOUR_PASSWORD&amp;#125;  -e &quot;source .&#x2F;xx&#x2F;xx.sql&amp;q">
+  <meta name="description" content="引出问题做数据加工的同学经常需要通过shell脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。 1mysql -h$&amp;#123;mysql_host&amp;#125;  -P$&amp;#123;mysql_port&amp;#125; -u$&amp;#123;mysql_user&amp;#125; -p$&amp;#123;mysql_password&amp;#125; $&amp;#123;mysql_dbname&amp;#125;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL-避免密码明文写入shell脚本的最佳实践">
 <meta property="og:url" content="http://example.com/2023/12/08/15-mysql-config-editor/index.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="引出问题做数据加工的同学经常需要通过shell脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。 1mysql -h$&amp;#123;YOUR_HOST&amp;#125;  -P$&amp;#123;YOUR_PORT&amp;#125; -u$&amp;#123;YOUR_USER&amp;#125; -p$&amp;#123;YOUR_PASSWORD&amp;#125;  -e &quot;source .&#x2F;xx&#x2F;xx.sql&amp;q">
+<meta property="og:description" content="引出问题做数据加工的同学经常需要通过shell脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。 1mysql -h$&amp;#123;mysql_host&amp;#125;  -P$&amp;#123;mysql_port&amp;#125; -u$&amp;#123;mysql_user&amp;#125; -p$&amp;#123;mysql_password&amp;#125; $&amp;#123;mysql_dbname&amp;#125;">
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/2023/12/08/15-mysql-config-editor/warning-insecure.png">
 <meta property="og:image" content="http://example.com/2023/12/08/15-mysql-config-editor/qrcode-wechat-web.jpg">
 <meta property="article:published_time" content="2023-12-08T08:32:16.000Z">
-<meta property="article:modified_time" content="2023-12-08T09:16:26.893Z">
+<meta property="article:modified_time" content="2023-12-08T10:04:18.391Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="mysql">
 <meta property="article:tag" content="shell">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-12-08 16:32:16 / Modified: 17:16:26" itemprop="dateCreated datePublished" datetime="2023-12-08T16:32:16+08:00">2023-12-08</time>
+              <time title="Created: 2023-12-08 16:32:16 / Modified: 18:04:18" itemprop="dateCreated datePublished" datetime="2023-12-08T16:32:16+08:00">2023-12-08</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,7 +218,7 @@
 
       
         <h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>做数据加工的同学经常需要通过<code>shell</code>脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h$&#123;YOUR_HOST&#125;  -P$&#123;YOUR_PORT&#125; -u$&#123;YOUR_USER&#125; -p$&#123;YOUR_PASSWORD&#125;  -e &quot;source ./xx/xx.sql&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h$&#123;mysql_host&#125;  -P$&#123;mysql_port&#125; -u$&#123;mysql_user&#125; -p$&#123;mysql_password&#125; $&#123;mysql_dbname&#125;  -e &quot;source ./sql/sql1.sql&quot;</span><br></pre></td></tr></table></figure>
 
 <p>如果直接将密码写到命令行将出现如下的警告</p>
 <p><strong>Warning: Using a password on the command line interface can be insecure.</strong></p>
@@ -226,11 +226,11 @@
 <p>那么用<code>shell</code>脚本操作MySQL时如何避免将密码明文写到shell脚本中呢? 本文提供2种思路</p>
 <h1 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h1><h2 id="思路1-defaults-extra-file-选项"><a href="#思路1-defaults-extra-file-选项" class="headerlink" title="思路1 defaults-extra-file 选项"></a>思路1 defaults-extra-file 选项</h2><p><code>defaults-extra-file</code> 是 mysql 命令的一个选项，它允许你指定一个包含额外配置信息的配置文件，对于在执行mysql命令时提供一些额外的配置非常有用。</p>
 <p>具体命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --defaults-extra-file=./my.cnf  -e &quot;source ./xx/xx.sql&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --defaults-extra-file=./my.cnf  -e &quot;source ./sql/sql1.sql&quot;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到这里并没有在命令行中指定数据库连接信息，而是将这些信息配置在配置文件my.cnf</p>
 <p>my.cnf</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">host</span> = <span class="string">&quot;YOUR_HOST&quot;</span></span><br><span class="line"><span class="attr">port</span> = <span class="string">&quot;YOUR_PORT&quot;</span></span><br><span class="line"><span class="attr">user</span> = <span class="string">&quot;YOUR_USER&quot;</span></span><br><span class="line"><span class="attr">password</span> = <span class="string">&quot;YOUR_PASSWORD&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">host</span>=<span class="number">10.37</span>.<span class="number">129.20</span></span><br><span class="line"><span class="attr">port</span>=<span class="number">3309</span></span><br><span class="line"><span class="attr">user</span>=root</span><br><span class="line"><span class="attr">password</span>=root</span><br><span class="line"><span class="attr">database</span>=testdb</span><br></pre></td></tr></table></figure>
 
 
 
@@ -240,10 +240,10 @@
 <p>例如写shell脚本时不用再为将密码明文写在脚本里而纠结；另外如果使用mysql命令登录数据库也可以避免每次都要输入一堆参数。</p>
 <p><strong>具体使用方式</strong></p>
 <p><strong>步骤1:</strong> 先用 <code>mysql_config_editor</code> 添加一个login-path</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G your_login_path -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G test-login-path1 -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
 
 <ol>
-<li>该命令用<code>mysql_config_editor</code>创建一个MySQL密钥</li>
+<li>该命令用<code>mysql_config_editor</code>创建一个名为test-login-path1的MySQL密钥</li>
 <li>其将登录MySQL的 username、password、port等参数加密存入文件中</li>
 <li>最终会在当前用户目录下生成一个隐藏文件<code>.mylogin.cnf</code> </li>
 <li>其可作为连接MySQL服务器的认证凭证，以后在命令行或者脚本中使用可免于输入明文密码，安全方便。</li>
@@ -251,14 +251,12 @@
 <p><strong>步骤2:</strong> 连接数据库时指定login-path不需要再指定登录信息</p>
 <p>如下演示2个使用 –login-path 参数的命令</p>
 <p>登录mysql</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=$&#123;your_login_path&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=test-login-path1</span><br></pre></td></tr></table></figure>
 
 
 
 <p>连接mysql 并执行sql语句</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=$&#123;your_login_path&#125; -e &quot;source $&#123;sql_file&#125;&quot;</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=test-login-path1 -e &quot;source ./sql/sql1.sql&quot;</span><br></pre></td></tr></table></figure>
 
 <p>是不是挺方便? 这样既避免了敏感信息的暴露，也避免了重复输入登录信息，方便了运维人员操作。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文详细探讨了两种连接 MySQL 时避免将密码以明文形式写入<code>shell</code> 脚本的策略。通过采纳这些最佳实践，我们在完成工作的基础上，进一步加强了对敏感数据的保护。这些技巧的应用不仅提升了系统的安全水平，还展现了对隐私和敏感信息的负责任的态度， 快点实践起来吧!</p>
