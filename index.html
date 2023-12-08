@@ -162,6 +162,120 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/12/08/15-mysql-config-editor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/12/08/15-mysql-config-editor/" class="post-title-link" itemprop="url">MySQL-避免密码明文写入shell脚本的最佳实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-12-08 16:32:16 / Modified: 16:39:05" itemprop="dateCreated datePublished" datetime="2023-12-08T16:32:16+08:00">2023-12-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>做数据加工的同学经常需要通过<code>shell</code>脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h$&#123;YOUR_HOST&#125;  -P$&#123;YOUR_PORT&#125; -u$&#123;YOUR_USER&#125; -p$&#123;YOUR_PASSWORD&#125;  -e &quot;source ./xx/xx.sql&quot;</span><br></pre></td></tr></table></figure>
+
+<p>如果直接将密码写到命令行将出现如下的警告</p>
+<p><strong>Warning: Using a password on the command line interface can be insecure.</strong></p>
+<p><img src="/2023/12/08/15-mysql-config-editor/warning-insecure.png" alt="warning-insecure"></p>
+<p>那么用<code>shell</code>脚本操作MySQL时如何避免将密码明文写到shell脚本中呢? 本文提供2种思路</p>
+<h1 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h1><h2 id="思路1-defaults-extra-file-选项"><a href="#思路1-defaults-extra-file-选项" class="headerlink" title="思路1 defaults-extra-file 选项"></a>思路1 defaults-extra-file 选项</h2><p><code>defaults-extra-file</code> 是 mysql 命令的一个选项，它允许你指定一个包含额外配置信息的配置文件，对于在执行mysql命令时提供一些额外的配置非常有用。</p>
+<p>具体命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --defaults-extra-file=./my.cnf  -e &quot;source ./xx/xx.sql&quot;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到这里并没有在命令行中指定数据库连接信息，而是将这些信息配置在配置文件my.cnf</p>
+<p>my.cnf</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">host</span> = <span class="string">&quot;YOUR_HOST&quot;</span></span><br><span class="line"><span class="attr">port</span> = <span class="string">&quot;YOUR_PORT&quot;</span></span><br><span class="line"><span class="attr">user</span> = <span class="string">&quot;YOUR_USER&quot;</span></span><br><span class="line"><span class="attr">password</span> = <span class="string">&quot;YOUR_PASSWORD&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="思路2-MySQL-安全登陆工具-mysql-config-editor"><a href="#思路2-MySQL-安全登陆工具-mysql-config-editor" class="headerlink" title="思路2  MySQL 安全登陆工具 mysql_config_editor"></a>思路2  MySQL 安全登陆工具 mysql_config_editor</h2><p><code>mysql_config_editor</code> 是MySQL自带的一款用于安全加密登录的工具，可以在一些场合避免使用明文密码。</p>
+<p>例如写shell脚本时不用再为将密码明文写在脚本里而纠结；另外如果使用mysql命令登录数据库也可以避免每次都要输入一堆参数。</p>
+<p><strong>具体使用方式</strong></p>
+<ol>
+<li>先用 mysql_config_editor 添加一个login-path</li>
+<li>连接数据库时指定login-path 不再需要指定登录信息</li>
+</ol>
+<p><strong>步骤1:</strong> 先用 mysql_config_editor 添加一个login-path</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G xx-pbc -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
+
+<p>该命令用mysql_config_editor创建一个MySQL密钥，将登录MySQL的 username、password、port等参数加密存入文件中，回车后会让你输入密码，之后会在当前用户目录下生成一个隐藏文件<code>.mylogin.cnf</code> ，其可作为连接MySQL服务器的认证凭证，以后在命令行或者脚本中使用可免于输入明文密码，安全方便。</p>
+<p><strong>步骤2:</strong> 连接数据库时指定login-path不需要再指定登录信息</p>
+<p>如下演示2个使用 –login-path 参数的命令</p>
+<p>登录mysql</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=$&#123;your_login_path&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>连接mysql 并执行sql语句</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --login-path=$&#123;your_login_path&#125; -e &quot;source $&#123;sql_file&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>是不是挺方便? 这样既避免了敏感信息的暴露，也避免了重复输入登录信息，方便了运维人员操作。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文详细探讨了两种连接 MySQL 时避免将密码以明文形式写入<code>shell</code> 脚本的策略。通过采纳这些最佳实践，我们在完成工作的基础上，进一步加强了对敏感数据的保护。这些技巧的应用不仅提升了系统的安全水平，还展现了对隐私和敏感信息的负责任的态度， 快点实践起来吧!</p>
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><img src="/2023/12/08/15-mysql-config-editor/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/29/14-shell-long-options/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1172,110 +1286,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/26/04-st4-usage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/26/04-st4-usage/" class="post-title-link" itemprop="url">st4 字符串模板引擎的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-10-26 09:42:58" itemprop="dateCreated datePublished" datetime="2020-10-26T09:42:58+08:00">2020-10-26</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>有时需要定义一些模板,然后用实际值替换占位符. 这里介绍一个jar包 <strong>ST4</strong>.</p>
-<p>还是以生成验证码短信的例子为背景.</p>
-<p>如下是我定义的模板,需要传入用户名和验证码. </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">你好 &lt;name&gt; , 你的验证码是 &lt;captcha&gt;</span><br><span class="line">验证码5分钟有效,尽快使用</span><br></pre></td></tr></table></figure>
-
-
-
-<p>最终生成的文本如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">你好 张三 , 你的验证码是 123456</span><br><span class="line">验证码5分钟有效,尽快使用</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>如果模板越复杂使用ST4越能感觉到优势</strong>, 如用于生成源代码、web页面、电子邮件等复杂样式的文本.</p>
-<p>github地址</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/antlr/stringtemplate4">https://github.com/antlr/stringtemplate4</a></p>
-<h1 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h1><h2 id="pom-xml-引入依赖"><a href="#pom-xml-引入依赖" class="headerlink" title="pom.xml 引入依赖"></a>pom.xml 引入依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.antlr<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ST4<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="一些示例"><a href="#一些示例" class="headerlink" title="一些示例"></a>一些示例</h2><h3 id="示例1-简单示例"><a href="#示例1-简单示例" class="headerlink" title="示例1 简单示例"></a>示例1 简单示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 最简单的示例</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">helloWorld</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ST hello = <span class="keyword">new</span> ST(<span class="string">&quot;Hello, &lt;name&gt;&quot;</span>);</span><br><span class="line">        hello.add(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;World&quot;</span>);</span><br><span class="line">        System.out.println(hello.render());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个例子算是st4的helloworld版,让你快速感受下.</p>
-<h3 id="示例2-STGroupFile的使用"><a href="#示例2-STGroupFile的使用" class="headerlink" title="示例2 STGroupFile的使用"></a>示例2 STGroupFile的使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 演示  STGroupFile 的使用</span></span><br><span class="line"><span class="comment">     * 可以将多个模板内容放在一个文件中,所以其后缀名叫stg.</span></span><br><span class="line"><span class="comment">     * */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testGroupFile</span><span class="params">()</span></span>&#123;</span><br><span class="line">        STGroup group=<span class="keyword">new</span> STGroupFile(<span class="string">&quot;templates/templates.stg&quot;</span>);</span><br><span class="line">        ST st=group.getInstanceOf(<span class="string">&quot;ShortMessage&quot;</span>);</span><br><span class="line">        st.add(<span class="string">&quot;name&quot;</span>,<span class="string">&quot;张三&quot;</span>);</span><br><span class="line">        st.add(<span class="string">&quot;captcha&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        String result=st.render();</span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>如下定义模板文件, 可以看到其定义有点像函数的形式.</p>
-<p>resouces/templates/templates.stg</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ShortMessage(name,captcha) ::&#x3D;</span><br><span class="line">&lt;&lt;</span><br><span class="line">你好 &lt;name&gt; , 你的验证码是 &lt;captcha&gt;</span><br><span class="line">验证码5分钟有效,尽快使用</span><br><span class="line">&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>当模板过于复杂时,以硬编码的方式将模板写在代码中不方便,因此将模板内容写入到文件是一个不错的选择.</p>
-<h3 id="示例3-传入参数是对象"><a href="#示例3-传入参数是对象" class="headerlink" title="示例3 传入参数是对象"></a>示例3 传入参数是对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    * 如下演示传入的参数是对象 而不是单个的值</span></span><br><span class="line"><span class="comment">    * 而且其占位符也不是默认的&lt; 和&gt; 而是$了</span></span><br><span class="line"><span class="comment">    * */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testModelObject</span><span class="params">()</span></span>&#123;</span><br><span class="line">        ST st = <span class="keyword">new</span> ST(<span class="string">&quot;&lt;b&gt;$u.id$&lt;/b&gt;: $u.name$&quot;</span>, <span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;$&#x27;</span>);</span><br><span class="line">        st.add(<span class="string">&quot;u&quot;</span>, <span class="keyword">new</span> User(<span class="number">999</span>, <span class="string">&quot;parrt&quot;</span>));</span><br><span class="line">        String result = st.render(); <span class="comment">// &quot;&lt;b&gt;999&lt;/b&gt;: parrt&quot;</span></span><br><span class="line">        System.out.println(result);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个例子也很经典 </p>
-<ul>
-<li>一是其传入的参数是一个对象,而不是字符串等基本类型了</li>
-<li>二是这里自己指定了占位符</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1345,20 +1355,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
