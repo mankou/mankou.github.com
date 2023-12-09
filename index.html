@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-12-09 09:23:30" itemprop="dateModified" datetime="2023-12-09T09:23:30+08:00">2023-12-09</time>
+                <time title="Modified: 2023-12-09 17:15:17" itemprop="dateModified" datetime="2023-12-09T17:15:17+08:00">2023-12-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +216,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>做数据加工的同学经常需要通过<code>shell</code>脚本执行sql语句来操作MySQL，  对于下面的命令应该并不陌生。</p>
+          <h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>做数据加工的同学有时需要通过<code>shell</code>脚本执行sql语句操作MySQL，  对于下面的命令应该并不陌生。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h$&#123;mysql_host&#125;  -P$&#123;mysql_port&#125; -u$&#123;mysql_user&#125; -p$&#123;mysql_password&#125; $&#123;mysql_dbname&#125;  -e &quot;source ./sql/sql1.sql&quot;</span><br></pre></td></tr></table></figure>
 
 <p>如果直接将密码写到命令行将出现如下的警告</p>
@@ -227,7 +227,7 @@
 <p>具体命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql --defaults-extra-file=./my.cnf  -e &quot;source ./sql/sql1.sql&quot;</span><br></pre></td></tr></table></figure>
 
-<p>可以看到这里并没有在命令行中指定数据库连接信息，而是将这些信息配置在配置文件my.cnf中</p>
+<p>可以看到这里并没有在命令行中指定数据库连接信息，而是将这些信息配置在配置文件./my.cnf中</p>
 <p>my.cnf</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[client]</span></span><br><span class="line"><span class="attr">host</span>=YOUR_HOST</span><br><span class="line"><span class="attr">port</span>=YOUR_PORT</span><br><span class="line"><span class="attr">user</span>=YOUR_USER</span><br><span class="line"><span class="attr">password</span>=YOUR_PASSWORD</span><br><span class="line"><span class="attr">database</span>=YOUR_DATABASE</span><br></pre></td></tr></table></figure>
 
@@ -235,7 +235,7 @@
 
 
 
-<h2 id="思路2-MySQL-安全登陆工具-mysql-config-editor"><a href="#思路2-MySQL-安全登陆工具-mysql-config-editor" class="headerlink" title="思路2  MySQL 安全登陆工具 mysql_config_editor"></a>思路2  MySQL 安全登陆工具 mysql_config_editor</h2><p><code>mysql_config_editor</code> 是MySQL自带的一款用于安全加密登录的工具，可以在一些场合避免使用明文密码。另外如果使用mysql命令登录数据库也可以避免每次都要输入一堆参数。</p>
+<h2 id="思路2-MySQL-安全登陆工具-mysql-config-editor"><a href="#思路2-MySQL-安全登陆工具-mysql-config-editor" class="headerlink" title="思路2  MySQL 安全登陆工具 mysql_config_editor"></a>思路2  MySQL 安全登陆工具 mysql_config_editor</h2><p><code>mysql_config_editor</code> 是MySQL自带的一款用于安全加密登录的工具，可以在一些场合避免使用明文密码；另外如果使用mysql命令登录数据库也可以避免每次都输入一堆参数。</p>
 <p><strong>具体使用方式</strong></p>
 <p><strong>步骤1:</strong> 先用 <code>mysql_config_editor</code> 添加一个login-path</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql_config_editor set -G test-login-path1 -h $&#123;mysql_host&#125; -P $&#123;mysql_port&#125; -u $&#123;mysql_user&#125; -p</span><br></pre></td></tr></table></figure>
