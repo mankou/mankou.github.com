@@ -162,6 +162,113 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/02/16-shell-wait/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/02/02/16-shell-wait/" class="post-title-link" itemprop="url">shell 并行运行程序</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-02-02 17:09:44" itemprop="dateCreated datePublished" datetime="2024-02-02T17:09:44+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-02-04 18:02:22" itemprop="dateModified" datetime="2024-02-04T18:02:22+08:00">2024-02-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧。</p>
+<h1 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，后面做演示时会用到该程序。</p>
+<p><img src="/2024/02/02/16-shell-wait/code-task.png" alt="code-task"></p>
+<p>该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数</p>
+<ul>
+<li>第一个参数是任务名称</li>
+<li>第二个参数是要休眠的时长(单位秒)，相当于模拟程序运行了多少秒</li>
+</ul>
+<p>调用方式如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动一个名为task1的任务， 运行10秒后结束</span></span><br><span class="line">./task.sh task1 10</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="串行执行"><a href="#串行执行" class="headerlink" title="串行执行"></a>串行执行</h2><p>shell中的命令都是串行执行的，下面这段代码比较典型，通常用于启动程序，大家应该比较熟悉。</p>
+<p>如下依次启动3个任务， task1 运行10秒， task2 运行20秒，task3运行30秒</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test1.png" alt="code-test1"></p>
+<p>test1执行结果如下</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test1.png" alt="run-test1"></p>
+<p>可以看到任务是串行执行的， task1运行了10秒，task2运行了20秒，task3运行了30秒，总共运行了60秒，这个符合我们的预期。</p>
+<h2 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a><strong>并行执行</strong></h2><p>之前讲了shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行该如何做呢?</p>
+<p>这里并不希望大量改造业务代码，希望用最小的代价，让程序并行运行， 下面提供一种思路 <strong>使用&amp;和wait改造启动脚本。</strong></p>
+<h3 id="基础知识铺垫"><a href="#基础知识铺垫" class="headerlink" title="基础知识铺垫"></a>基础知识铺垫</h3><p><strong>&amp; 是让程序后台运行</strong></p>
+<p>在shell脚本中当我们需要把一个任务放在后台运行时，通常我们会使用<code>&amp;符号</code>， 此时主进程会继续往下执行，而子进程会在后台启动运行。</p>
+<p><strong>wait命令</strong></p>
+<p><code>wait</code>命令用来阻塞当前进程的执行，直至指定的子进程执行结束后，才继续执行。</p>
+<p>如果wait后面不带任何的进程号或作业号，那么wait会阻塞当前进程的执行，直至当前进程的所有子进程都执行结束后，才继续执行</p>
+<p><strong>wait命令一个很重要用途就是用在shell并行编程中</strong>，可以在shell脚本中启动多个后台进程（使用&amp;），然后调用wait命令，等待所有后台进程都运行完毕后，主进程再继续向下执行。</p>
+<h3 id="并行执行演示"><a href="#并行执行演示" class="headerlink" title="并行执行演示"></a>并行执行演示</h3><p>有了上面的知识铺垫，下面再看一段代码，参见 test2，其和test1的区别是增加了&amp;， 让任务后台运行。</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test2.png" alt="code-test2"></p>
+<p>执行结果如下</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test2.png" alt="run-test2"></p>
+<p>可以看到3个任务是并行运行的， 但是主程序并没有等待3个任务运行完就结束了，相当于失去了对子进程的控制。</p>
+<p>下面再看一段代码，参见test3， 其在test2的基础上更进一步，在最后面加了<code>wait</code>命令，其会等待上面3个任务都运行完后才会执行后面的语句</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test3.png" alt="code-test3"></p>
+<p>test3的运行结果如下，可以看到总共运行了30秒，从时间上就可以看出其是等运行时间最长的任务结束后才执行后面的逻辑，也即等所有的任务都运行结束后才会执行后面的逻辑。</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test3.png" alt="run-test3"></p>
+<p><strong>这就是我想要的结果，比较贴合实际情况</strong>，在子任务运行完成后，主程序还要做一些收尾工作，所以要等到所有子任务都运行完成后才能执行后续的逻辑。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>通过上述的改造， 可以大大的提高程序运行效率，在完成业务需求的同时，还可以充分利用主机资源，减少等待时间。</p>
+<p>该技巧抽取自笔者在真实项目中的实践，在不需要大量改造主体代码的情况下就能让程序并行运行，也不失为一种好办法。</p>
+<p>笔者就是用这些朴素的技巧，硬上将运行时长从十几小时降到10分钟内，达到了业务目标，小伙伴们快点实践起来吧。</p>
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><img src="/2024/02/02/16-shell-wait/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/12/08/15-mysql-config-editor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1146,149 +1253,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/16/06-util-usage-01/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/11/16/06-util-usage-01/" class="post-title-link" itemprop="url">工具类整理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-11-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-16T00:00:00+08:00">2020-11-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-22 16:39:52" itemprop="dateModified" datetime="2021-05-22T16:39:52+08:00">2021-05-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本文推荐一些java中好用的工具类</p>
-<ol>
-<li>如统计执行时长的 Guava下的 Stopwatch 类</li>
-<li>Bean 与 Map 相互转换的 Apache的BeanUtils</li>
-</ol>
-<h1 id="计时相关"><a href="#计时相关" class="headerlink" title="计时相关"></a>计时相关</h1><p>项目中经常有记录某一操作花费多长时间的需求，如下是最开始的代码，是不是很熟悉？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line"><span class="comment">//do something</span></span><br><span class="line">Thread.sleep(<span class="number">2020</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">System.out.println(<span class="string">&quot;运行时间：&quot;</span>+(end - start)+ <span class="string">&quot;ms&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>这种方式确实简单，但是这种方式也有不灵活的地方</p>
-<ol>
-<li>默认情况下我们只能取ms为单位，如果需要分钟，则需要自己换算单位。</li>
-<li>不能支持更复杂的计时需求，如中途暂停计时，当代码执行到某一步再继续计时。</li>
-</ol>
-<p><strong>下面介绍一个关于计时的工具类 Guava下的 Stopwatch</strong></p>
-<p>引入依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.guava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guava<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>23.5-jre<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Stopwatch代码示例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopwatch1</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="comment">//创建stopwatch并开始计时</span></span><br><span class="line">    Stopwatch stopwatch=Stopwatch.createStarted();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Thread.sleep(<span class="number">2020</span>);</span><br><span class="line">    System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//暂停计时</span></span><br><span class="line">    stopwatch.stop();</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//再次开始计时</span></span><br><span class="line">    stopwatch.start();</span><br><span class="line">    Thread.sleep(<span class="number">2020</span>);</span><br><span class="line">    stopwatch.stop();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//统计运行时长</span></span><br><span class="line">    System.out.println(stopwatch.elapsed(TimeUnit.MILLISECONDS));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到除了满足基本的计时需求外，其使用更灵活，更简单。 </p>
-<ol>
-<li><p>不需要自己再去计算时长</p>
-</li>
-<li><p>可以中途暂停计时</p>
-</li>
-</ol>
-<p>下面总结下常用的操作</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建计时器,但是不立即运行 需要主动调用 stopwatch.start()方法开始计时</span></span><br><span class="line">Stopwatch stopwatch=Stopwatch.createUnstarted();</span><br><span class="line">stopwatch.start();</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建stopwatch并开始计时</span></span><br><span class="line"> Stopwatch stopwatch=Stopwatch.createStarted();</span><br><span class="line"></span><br><span class="line"><span class="comment">//暂停计时</span></span><br><span class="line">stopwatch.stop();</span><br><span class="line"></span><br><span class="line"><span class="comment">//统计运行时长</span></span><br><span class="line">stopwatch.elapsed(TimeUnit.MILLISECONDS)</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="Bean-与-Map-互转"><a href="#Bean-与-Map-互转" class="headerlink" title="Bean 与 Map 互转"></a>Bean 与 Map 互转</h1><p>日常开发中经常有将Bean转成Map,或者将Map转成Bean的需求,这里阐述下具体的实现.</p>
-<p>目前Map 与 Bean互转有如下几种方式</p>
-<ol>
-<li>方式一: 通过Jackson 先将Bean转成json,再将json转成Map</li>
-<li>方式二: 使用Spring的BeanMap类</li>
-<li>方式三: 使用Apache的BeanUtils</li>
-</ol>
-<p>我目前使用方式三. 原因如下</p>
-<ol>
-<li>方式一 效率不行</li>
-<li>方式二 需要依赖spring,在有些非spring系工程中不方便使用</li>
-</ol>
-<p><strong>使用Apache的BeanUtils</strong></p>
-<p><strong>引入依赖</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-beanutils<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>bean 转 map</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * bean 转 map</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Map <span class="title">beanToMap</span><span class="params">(Object bean)</span></span>&#123;</span><br><span class="line">    Map&lt;String,String&gt; map=Maps.newHashMap();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        map=BeanUtils.describe(bean);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> map;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>map 转 bean</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * map 转 bean</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">mapToBean</span><span class="params">(Map map,Object bean)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        BeanUtils.populate(bean,map);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<hr>
-<p>微信端的朋友也可关注我的公众号</p>
-<p><strong>小马向前走</strong></p>
-<p><img src="/2020/11/16/06-util-usage-01/qrcode-12cm.jpg" alt="qrcode-12cm"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1358,7 +1322,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1398,7 +1362,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

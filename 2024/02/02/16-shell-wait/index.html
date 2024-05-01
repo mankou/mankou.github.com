@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引言我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧。 代码演示准备工作在做整体的演示之前，先写一个程序模拟任务运行的过程，后面做演示时会用到该程序。  该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数  第一个参数是任务名称 第二个参数是要休眠的时长(单位秒)，相当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell 并行运行程序">
+<meta property="og:url" content="http://example.com/2024/02/02/16-shell-wait/index.html">
+<meta property="og:site_name" content="小马向前走">
+<meta property="og:description" content="引言我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧。 代码演示准备工作在做整体的演示之前，先写一个程序模拟任务运行的过程，后面做演示时会用到该程序。  该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数  第一个参数是任务名称 第二个参数是要休眠的时长(单位秒)，相当">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/code-task.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/code-test1.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/run-test1.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/code-test2.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/run-test2.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/code-test3.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/run-test3.png">
+<meta property="og:image" content="http://example.com/2024/02/02/16-shell-wait/qrcode-wechat-web.jpg">
+<meta property="article:published_time" content="2024-02-02T09:09:44.000Z">
+<meta property="article:modified_time" content="2024-02-04T10:02:22.855Z">
+<meta property="article:author" content="maning">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2024/02/02/16-shell-wait/code-task.png">
+
+<link rel="canonical" href="http://example.com/2024/02/02/16-shell-wait/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>shell 并行运行程序 | 小马向前走</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小马向前走</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/02/16-shell-wait/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          shell 并行运行程序
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-02-02 17:09:44" itemprop="dateCreated datePublished" datetime="2024-02-02T17:09:44+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-02-04 18:02:22" itemprop="dateModified" datetime="2024-02-04T18:02:22+08:00">2024-02-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧。</p>
+<h1 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，后面做演示时会用到该程序。</p>
+<p><img src="/2024/02/02/16-shell-wait/code-task.png" alt="code-task"></p>
+<p>该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数</p>
+<ul>
+<li>第一个参数是任务名称</li>
+<li>第二个参数是要休眠的时长(单位秒)，相当于模拟程序运行了多少秒</li>
+</ul>
+<p>调用方式如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动一个名为task1的任务， 运行10秒后结束</span></span><br><span class="line">./task.sh task1 10</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="串行执行"><a href="#串行执行" class="headerlink" title="串行执行"></a>串行执行</h2><p>shell中的命令都是串行执行的，下面这段代码比较典型，通常用于启动程序，大家应该比较熟悉。</p>
+<p>如下依次启动3个任务， task1 运行10秒， task2 运行20秒，task3运行30秒</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test1.png" alt="code-test1"></p>
+<p>test1执行结果如下</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test1.png" alt="run-test1"></p>
+<p>可以看到任务是串行执行的， task1运行了10秒，task2运行了20秒，task3运行了30秒，总共运行了60秒，这个符合我们的预期。</p>
+<h2 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a><strong>并行执行</strong></h2><p>之前讲了shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行该如何做呢?</p>
+<p>这里并不希望大量改造业务代码，希望用最小的代价，让程序并行运行， 下面提供一种思路 <strong>使用&amp;和wait改造启动脚本。</strong></p>
+<h3 id="基础知识铺垫"><a href="#基础知识铺垫" class="headerlink" title="基础知识铺垫"></a>基础知识铺垫</h3><p><strong>&amp; 是让程序后台运行</strong></p>
+<p>在shell脚本中当我们需要把一个任务放在后台运行时，通常我们会使用<code>&amp;符号</code>， 此时主进程会继续往下执行，而子进程会在后台启动运行。</p>
+<p><strong>wait命令</strong></p>
+<p><code>wait</code>命令用来阻塞当前进程的执行，直至指定的子进程执行结束后，才继续执行。</p>
+<p>如果wait后面不带任何的进程号或作业号，那么wait会阻塞当前进程的执行，直至当前进程的所有子进程都执行结束后，才继续执行</p>
+<p><strong>wait命令一个很重要用途就是用在shell并行编程中</strong>，可以在shell脚本中启动多个后台进程（使用&amp;），然后调用wait命令，等待所有后台进程都运行完毕后，主进程再继续向下执行。</p>
+<h3 id="并行执行演示"><a href="#并行执行演示" class="headerlink" title="并行执行演示"></a>并行执行演示</h3><p>有了上面的知识铺垫，下面再看一段代码，参见 test2，其和test1的区别是增加了&amp;， 让任务后台运行。</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test2.png" alt="code-test2"></p>
+<p>执行结果如下</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test2.png" alt="run-test2"></p>
+<p>可以看到3个任务是并行运行的， 但是主程序并没有等待3个任务运行完就结束了，相当于失去了对子进程的控制。</p>
+<p>下面再看一段代码，参见test3， 其在test2的基础上更进一步，在最后面加了<code>wait</code>命令，其会等待上面3个任务都运行完后才会执行后面的语句</p>
+<p><img src="/2024/02/02/16-shell-wait/code-test3.png" alt="code-test3"></p>
+<p>test3的运行结果如下，可以看到总共运行了30秒，从时间上就可以看出其是等运行时间最长的任务结束后才执行后面的逻辑，也即等所有的任务都运行结束后才会执行后面的逻辑。</p>
+<p><img src="/2024/02/02/16-shell-wait/run-test3.png" alt="run-test3"></p>
+<p><strong>这就是我想要的结果，比较贴合实际情况</strong>，在子任务运行完成后，主程序还要做一些收尾工作，所以要等到所有子任务都运行完成后才能执行后续的逻辑。</p>
+<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>通过上述的改造， 可以大大的提高程序运行效率，在完成业务需求的同时，还可以充分利用主机资源，减少等待时间。</p>
+<p>该技巧抽取自笔者在真实项目中的实践，在不需要大量改造主体代码的情况下就能让程序并行运行，也不失为一种好办法。</p>
+<p>笔者就是用这些朴素的技巧，硬上将运行时长从十几小时降到10分钟内，达到了业务目标，小伙伴们快点实践起来吧。</p>
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><img src="/2024/02/02/16-shell-wait/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/shell/" rel="tag"># shell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/08/15-mysql-config-editor/" rel="prev" title="MySQL-避免密码明文写入shell脚本的最佳实践">
+      <i class="fa fa-chevron-left"></i> MySQL-避免密码明文写入shell脚本的最佳实践
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA"><span class="nav-number">2.</span> <span class="nav-text">代码演示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%B2%E8%A1%8C%E6%89%A7%E8%A1%8C"><span class="nav-number">2.2.</span> <span class="nav-text">串行执行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C"><span class="nav-number">2.3.</span> <span class="nav-text">并行执行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E9%93%BA%E5%9E%AB"><span class="nav-number">2.3.1.</span> <span class="nav-text">基础知识铺垫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C%E6%BC%94%E7%A4%BA"><span class="nav-number">2.3.2.</span> <span class="nav-text">并行执行演示</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">3.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">maning</p>
+  <div class="site-description" itemprop="description">小马向前走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maning</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
