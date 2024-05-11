@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-05-11 17:06:51" itemprop="dateModified" datetime="2024-05-11T17:06:51+08:00">2024-05-11</time>
+                <time title="Modified: 2024-05-11 17:44:47" itemprop="dateModified" datetime="2024-05-11T17:44:47+08:00">2024-05-11</time>
               </span>
 
           
@@ -230,7 +230,7 @@
 <p>这里并不希望大量改造程序，希望用最小的代价，让程序并行运行， 下面提供一种思路 <strong>使用&amp;和wait改造启动脚本即可，不需要改造程序。</strong></p>
 <h3 id="基础知识铺垫"><a href="#基础知识铺垫" class="headerlink" title="基础知识铺垫"></a>基础知识铺垫</h3><p><strong>&amp; 让程序后台运行</strong></p>
 <p>在shell脚本中当我们需要把一个任务放在后台运行时，通常我们会使用<code>&amp;符号</code>， 此时主进程会继续往下执行，而子进程会在后台启动运行。</p>
-<p><strong>wait命令</strong></p>
+<p><strong>wait命令</strong>　在bash脚本“多进程”执行模式下，起到一些特殊控制的作用</p>
 <p>×　<code>wait</code>命令用来阻塞当前进程的执行，直至指定的子进程执行结束后，才继续执行。</p>
 <p>×　如果wait后面不带任何的进程号或作业号，那么wait会阻塞当前进程的执行，直至当前进程的所有子进程都执行结束后，才继续执行</p>
 <p>×　<strong>wait命令一个很重要用途就是用在shell并行编程中</strong>，可以在shell脚本中启动多个后台进程（使用&amp;），然后调用wait命令，等待所有后台进程都运行完毕后，主进程再继续向下执行。</p>
