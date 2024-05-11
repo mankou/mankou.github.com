@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-05-11 16:41:11" itemprop="dateModified" datetime="2024-05-11T16:41:11+08:00">2024-05-11</time>
+                <time title="Modified: 2024-05-11 16:51:11" itemprop="dateModified" datetime="2024-05-11T16:51:11+08:00">2024-05-11</time>
               </span>
 
           
@@ -208,7 +208,7 @@
 
       
           <h1 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h1><p>我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧，将用代码演示并行执行3个任务，并等待所有任务都执行完成后再执行后续的逻辑。</p>
-<h1 id="2-代码演示"><a href="#2-代码演示" class="headerlink" title="2. 代码演示"></a>2. 代码演示</h1><h2 id="2-1准备工作"><a href="#2-1准备工作" class="headerlink" title="2.1准备工作"></a>2.1准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，之后的演示时会用到该程序。</p>
+<h1 id="2-代码演示"><a href="#2-代码演示" class="headerlink" title="2. 代码演示"></a>2. 代码演示</h1><h2 id="2-1准备工作"><a href="#2-1准备工作" class="headerlink" title="2.1准备工作"></a>2.1准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，之后演示时会用到该程序。</p>
 <p><img src="/2024/02/02/16-shell-wait/code-task.png" alt="code-task"></p>
 <p>该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数</p>
 <ul>
