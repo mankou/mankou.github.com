@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/02/02/16-shell-wait/" class="post-title-link" itemprop="url">shell 并行运行程序</a>
+            <a href="/2024/02/02/16-shell-wait/" class="post-title-link" itemprop="url">shell 并行运行程序技巧</a>
         </h2>
 
         <div class="post-meta">
@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-05-01 15:38:06" itemprop="dateModified" datetime="2024-05-01T15:38:06+08:00">2024-05-01</time>
+                <time title="Modified: 2024-05-11 16:41:11" itemprop="dateModified" datetime="2024-05-11T16:41:11+08:00">2024-05-11</time>
               </span>
 
           
@@ -207,8 +207,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧。</p>
-<h1 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，后面做演示时会用到该程序。</p>
+          <h1 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h1><p>我们知道shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行就需要些技巧了， 本文分享一些shell并行运行程序的技巧，将用代码演示并行执行3个任务，并等待所有任务都执行完成后再执行后续的逻辑。</p>
+<h1 id="2-代码演示"><a href="#2-代码演示" class="headerlink" title="2. 代码演示"></a>2. 代码演示</h1><h2 id="2-1准备工作"><a href="#2-1准备工作" class="headerlink" title="2.1准备工作"></a>2.1准备工作</h2><p>在做整体的演示之前，先写一个程序模拟任务运行的过程，之后的演示时会用到该程序。</p>
 <p><img src="/2024/02/02/16-shell-wait/code-task.png" alt="code-task"></p>
 <p>该程序名叫task.sh，其会休眠几秒模拟任务运行的过程，其有2个参数</p>
 <ul>
@@ -220,33 +220,33 @@
 
 
 
-<h2 id="串行执行"><a href="#串行执行" class="headerlink" title="串行执行"></a>串行执行</h2><p>shell中的命令都是串行执行的，下面这段代码比较典型，通常用于启动程序，大家应该比较熟悉。</p>
+<h2 id="2-2-串行执行"><a href="#2-2-串行执行" class="headerlink" title="2.2 串行执行"></a>2.2 串行执行</h2><p>shell中的命令都是串行执行的，下面这段代码比较典型，在启动程序的脚本中非常常见，大家应该比较熟悉。</p>
 <p>如下依次启动3个任务， task1 运行10秒， task2 运行20秒，task3运行30秒</p>
 <p><img src="/2024/02/02/16-shell-wait/code-test1.png" alt="code-test1"></p>
 <p>test1执行结果如下</p>
 <p><img src="/2024/02/02/16-shell-wait/run-test1.png" alt="run-test1"></p>
 <p>可以看到任务是串行执行的， task1运行了10秒，task2运行了20秒，task3运行了30秒，总共运行了60秒，这个符合我们的预期。</p>
-<h2 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a><strong>并行执行</strong></h2><p>之前讲了shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行该如何做呢?</p>
-<p>这里并不希望大量改造业务代码，希望用最小的代价，让程序并行运行， 下面提供一种思路 <strong>使用&amp;和wait改造启动脚本。</strong></p>
-<h3 id="基础知识铺垫"><a href="#基础知识铺垫" class="headerlink" title="基础知识铺垫"></a>基础知识铺垫</h3><p><strong>&amp; 是让程序后台运行</strong></p>
+<h2 id="2-3-并行执行"><a href="#2-3-并行执行" class="headerlink" title="2.3 并行执行"></a><strong>2.3 并行执行</strong></h2><p>之前讲了shell中的命令都是串行执行的，如果想要充分利用服务器资源，减小等待时间， 让程序并行运行该如何做呢?</p>
+<p>这里并不希望大量改造程序，希望用最小的代价，让程序并行运行， 下面提供一种思路 <strong>使用&amp;和wait改造启动脚本即可，不需要改造程序。</strong></p>
+<h3 id="2-3-1-基础知识铺垫"><a href="#2-3-1-基础知识铺垫" class="headerlink" title="2.3.1 基础知识铺垫"></a>2.3.1 基础知识铺垫</h3><p><strong>&amp; 是让程序后台运行</strong></p>
 <p>在shell脚本中当我们需要把一个任务放在后台运行时，通常我们会使用<code>&amp;符号</code>， 此时主进程会继续往下执行，而子进程会在后台启动运行。</p>
 <p><strong>wait命令</strong></p>
-<p><code>wait</code>命令用来阻塞当前进程的执行，直至指定的子进程执行结束后，才继续执行。</p>
-<p>如果wait后面不带任何的进程号或作业号，那么wait会阻塞当前进程的执行，直至当前进程的所有子进程都执行结束后，才继续执行</p>
-<p><strong>wait命令一个很重要用途就是用在shell并行编程中</strong>，可以在shell脚本中启动多个后台进程（使用&amp;），然后调用wait命令，等待所有后台进程都运行完毕后，主进程再继续向下执行。</p>
-<h3 id="并行执行演示"><a href="#并行执行演示" class="headerlink" title="并行执行演示"></a>并行执行演示</h3><p>有了上面的知识铺垫，下面再看一段代码，参见 test2，其和test1的区别是增加了&amp;， 让任务后台运行。</p>
+<p>×　<code>wait</code>命令用来阻塞当前进程的执行，直至指定的子进程执行结束后，才继续执行。</p>
+<p>×　如果wait后面不带任何的进程号或作业号，那么wait会阻塞当前进程的执行，直至当前进程的所有子进程都执行结束后，才继续执行</p>
+<p>×　<strong>wait命令一个很重要用途就是用在shell并行编程中</strong>，可以在shell脚本中启动多个后台进程（使用&amp;），然后调用wait命令，等待所有后台进程都运行完毕后，主进程再继续向下执行。</p>
+<h3 id="2-3-2-改进1"><a href="#2-3-2-改进1" class="headerlink" title="2.3.2 改进1"></a>2.3.2 改进1</h3><p>有了上面的知识铺垫，下面再看一段代码（参见 test2），其和test1的区别是增加了&amp;， 让任务后台运行。</p>
 <p><img src="/2024/02/02/16-shell-wait/code-test2.png" alt="code-test2"></p>
 <p>执行结果如下</p>
 <p><img src="/2024/02/02/16-shell-wait/run-test2.png" alt="run-test2"></p>
-<p>可以看到3个任务是并行运行的， 但是主程序并没有等待3个任务运行完就结束了，相当于失去了对子进程的控制。</p>
-<p>下面再看一段代码，参见test3， 其在test2的基础上更进一步，在最后面加了<code>wait</code>命令，其会等待上面3个任务都运行完后才会执行后面的语句</p>
+<p>可以看到3个任务虽然是并行执行的， 但是主程序并没有等待3个任务执行完就结束了，相当于失去了对子进程的控制。</p>
+<h3 id="2-3-3-改进2"><a href="#2-3-3-改进2" class="headerlink" title="2.3.3 改进2"></a>2.3.3 改进2</h3><p>下面再看一段代码（参见test3）， 其在test2的基础上更进一步，在末尾加了<code>wait</code>命令，其会等待上面3个任务都执行完才会执行后面的命令</p>
 <p><img src="/2024/02/02/16-shell-wait/code-test3.png" alt="code-test3"></p>
-<p>test3的运行结果如下，可以看到总共运行了30秒，从时间上就可以看出其是等运行时间最长的任务结束后才执行后面的逻辑，也即等所有的任务都运行结束后才会执行后面的逻辑。</p>
+<p>test3的运行结果如下，可以看到总共运行了30秒，从时间上可以看出其是等运行时间最长的任务结束后才执行后面的逻辑，也即等所有的任务都结束后才会执行后面的逻辑。</p>
 <p><img src="/2024/02/02/16-shell-wait/run-test3.png" alt="run-test3"></p>
-<p><strong>这就是我想要的结果，比较贴合实际情况</strong>，在子任务运行完成后，主程序还要做一些收尾工作，所以要等到所有子任务都运行完成后才能执行后续的逻辑。</p>
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>通过上述的改造， 可以大大的提高程序运行效率，在完成业务需求的同时，还可以充分利用主机资源，减少等待时间。</p>
-<p>该技巧抽取自笔者在真实项目中的实践，在不需要大量改造主体代码的情况下就能让程序并行运行，也不失为一种好办法。</p>
-<p>笔者就是用这些朴素的技巧，硬是将运行时长从十几小时降到10分钟内，达到了业务目标，小伙伴们快点实践起来吧。</p>
+<p><strong>这就是我想要的结果，比较贴合实际情况</strong>，在子任务运行完成后，主程序还要做一些收尾工作，所以要等到所有子任务都执行完才能执行后续的逻辑。</p>
+<h1 id="3-结语"><a href="#3-结语" class="headerlink" title="3. 结语"></a>3. 结语</h1><p>通过上述的改造， 可以大大的提高程序运行效率，在完成业务需求的同时，还可以充分利用主机资源，减少等待时间。</p>
+<p>该技巧抽取自笔者真实项目中的实践，在几乎没有改造主体代码的情况下就能让程序并行运行，也不失为一种好办法。</p>
+<p>笔者就是用这些朴素的技巧，硬是将运行时长从十几小时降到十分钟内，达到了优化目标，小伙伴们快点实践起来吧！</p>
 <hr>
 <p>微信端的朋友也可关注我的公众号</p>
 <p><img src="/2024/02/02/16-shell-wait/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
