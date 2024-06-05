@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-06-05 17:15:17" itemprop="dateModified" datetime="2024-06-05T17:15:17+08:00">2024-06-05</time>
+                <time title="Modified: 2024-06-05 17:25:11" itemprop="dateModified" datetime="2024-06-05T17:25:11+08:00">2024-06-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,7 +217,7 @@
 
       
           <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。</p>
-<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室启动的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
+<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室开发的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
 <p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
 <h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
 <h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
