@@ -187,7 +187,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-06-05 21:52:16 / Modified: 16:39:29" itemprop="dateCreated datePublished" datetime="2024-06-05T21:52:16+08:00">2024-06-05</time>
+              <time title="Created: 2024-06-05 21:52:16 / Modified: 17:10:37" itemprop="dateCreated datePublished" datetime="2024-06-05T21:52:16+08:00">2024-06-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,7 +211,7 @@
 
       
           <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。</p>
-<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室启动的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎来解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
+<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室启动的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
 <p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
 <h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
 <h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
@@ -221,7 +221,7 @@
 
 <p>树形结构图对应的源码如下，可以看到只需要定义节点及节点之间的关系，不需要关心布局。</p>
 <p><img src="/2024/06/05/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
-<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点向上遍历找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间是双向链接的。</p>
+<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
 <img src="/2024/06/05/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
 
 
@@ -236,7 +236,7 @@
 <li>如果是windows可直接下载安装包</li>
 <li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code>，</li>
 </ul>
-<p>如下是命令样例</p>
+<p>如下是用Graphviz命令将dot源文件生成图片的命令示例</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dot -Tpng input.dot -o output.png</span><br></pre></td></tr></table></figure>
 
 
