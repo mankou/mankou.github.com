@@ -162,6 +162,123 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/05/17-Graphviz/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/06/05/17-Graphviz/" class="post-title-link" itemprop="url">使用Graphviz画树形结构示意图</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-06-05 21:52:16 / Modified: 16:39:29" itemprop="dateCreated datePublished" datetime="2024-06-05T21:52:16+08:00">2024-06-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。</p>
+<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室启动的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎来解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
+<p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
+<h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
+<h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
+<img src="/2024/06/05/17-Graphviz/OrgTree-preview.png" alt="OrgTree-preview" style="zoom:50%;">
+
+
+
+<p>树形结构图对应的源码如下，可以看到只需要定义节点及节点之间的关系，不需要关心布局。</p>
+<p><img src="/2024/06/05/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
+<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点向上遍历找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间是双向链接的。</p>
+<img src="/2024/06/05/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
+
+
+
+<p>如下是对应的源码，这里箭头的指向为双向。</p>
+<p><img src="/2024/06/05/17-Graphviz/OrgMultiLineTree-codesnippet.png" alt="OrgMultiLineTree-codesnippet"></p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p>前几节介绍了Graphviz以及使用它的原因， 并且展示了我用它画树形结构的实例，本节介绍一些具体的工具，方便大家入门。</p>
+<p><strong>推荐1 Graphviz 命令行工具</strong></p>
+<p>Graphviz其实是一个命令行工具，使用它之前需要先安装，不同的操作系统安装方式不同，具体可查看官网 <a target="_blank" rel="noopener" href="https://graphviz.org/">https://graphviz.org/</a></p>
+<ul>
+<li>如果是mac可通过<code>homebrew</code>或者<code>port</code>安装</li>
+<li>如果是windows可直接下载安装包</li>
+<li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code>，</li>
+</ul>
+<p>如下是命令样例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dot -Tpng input.dot -o output.png</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>推荐2　vscode插件</strong></p>
+<p>Graphviz 是一个强大的命令行工具，但使用起来可能不太方便。幸运的是，VSCode 提供了一些插件，可以显著改善用户体验，使使用 Graphviz 更加直观和友好，下面介绍一些好用的插件。</p>
+<ol>
+<li>Graphviz language support for visual studio code  </li>
+</ol>
+<p>提供语法高亮</p>
+<p><img src="/2024/06/05/17-Graphviz/vscode-Graphviz-language-support-for-visual-studio-code.png" alt="vscode-Graphviz-language-support-for-visual-studio-code"></p>
+<ol start="2">
+<li>Graphviz Preview</li>
+</ol>
+<p>可以快速预览或者导出graphviz文件，这样就不需要记忆具体的命令了。</p>
+<p><img src="/2024/06/05/17-Graphviz/vscode-Graphviz-Preview.png" alt="vscode-Graphviz-Preview"></p>
+<p><strong>推荐3 python接口</strong></p>
+<p>很多编程语言会集成 Graphviz 绘图工具，PyGraphviz是Graphviz的Python接口，允许开发者使用Python代码与Graphviz进行交互，实现图形的创建、布局、可视化和分析</p>
+<p>官网 <a target="_blank" rel="noopener" href="https://github.com/pygraphviz/pygraphviz">https://github.com/pygraphviz/pygraphviz</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过掌握基本的 DOT 语言和 Graphviz 工具，用户可以轻松创建和自定义自己的图形，满足常见的可视化需求。正所谓一图胜千言，不论是在学术研究、软件开发还是日常工作中，Graphviz 都能够提供极大的便利和帮助，赶快实践起来，体验它的强大功能吧！</p>
+<hr>
+<p>微信端的朋友也可关注我的公众号</p>
+<p><img src="/2024/06/05/17-Graphviz/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/02/16-shell-wait/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1139,118 +1256,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/08/07-rest-template/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/08/07-rest-template/" class="post-title-link" itemprop="url">RestTemplate在非springboot工程中的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-02-08 15:34:58" itemprop="dateCreated datePublished" datetime="2021-02-08T15:34:58+08:00">2021-02-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-22 16:39:26" itemprop="dateModified" datetime="2021-05-22T16:39:26+08:00">2021-05-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h1><p>RestTemplate 是spring提供的访问rest接口的类，RestTemplate提供了多种便捷访问http服务的方法，使得调用rest接口更容易，记得在以前的代码中发送http请求我们还使用 HttpClient 或者 OkHttp 但其有如下的问题</p>
-<ol>
-<li>代码复杂</li>
-<li>需要操心资源回收等细节问题</li>
-<li>每个项目组都有自己的一套http工具类，重复造轮子</li>
-</ol>
-<p>现在我基本上用RestTemplate代替了以前自己写的工具类。</p>
-<p><strong>本文不讲RestTemplate的普遍使用方法，而是讲在非springboot工程中如何使用RestTemplate</strong></p>
-<p><strong>那为什么会有这样的场景呢？</strong>举个例子：我们要开发一个jar包提供给其他人，并集成到别人的工程中使用，该jar包封装对某短信接口的请求细节，别人只需要引入我们的jar包然后调用相关类即可，不用关心具体的http请求细节，因为我们提供的是一个很小的jar包，而不是一个完整的工程，所以再去用springboot那套就不合适了。</p>
-<p>大部分情况下我们的工程都是基于springboot或者spring系的，使用RestTemplate很简单，直接自动注入即可。 </p>
-<p><strong>那在脱离了spring系的工程中我们还能开心的使用RestTemplate么？</strong></p>
-<h1 id="在非springboot工程中使用RestTemplate"><a href="#在非springboot工程中使用RestTemplate" class="headerlink" title="在非springboot工程中使用RestTemplate"></a>在非springboot工程中使用RestTemplate</h1><p><strong>步骤 pom.xml 中添加依赖</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p><strong>步骤 代码中使用</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate=<span class="keyword">new</span> RestTemplate();</span><br><span class="line">HttpHeaders headers=<span class="keyword">new</span> HttpHeaders();</span><br><span class="line">headers.setContentType(MediaType.APPLICATION_JSON_UTF8);</span><br><span class="line">HttpEntity requestEntity=<span class="keyword">new</span> HttpEntity&lt;&gt;(bean,headers);</span><br><span class="line">ResponseEntity&lt;String&gt; responseEntity = restTemplate.exchange(url, HttpMethod.POST,requestEntity,String.class);</span><br></pre></td></tr></table></figure>
-
-<p>以前spring帮我们初始化RestTemplate，现在我们需要自己new 对象了，其它使用方式没有区别。</p>
-<h1 id="关于初始化RestTemplate的说明"><a href="#关于初始化RestTemplate的说明" class="headerlink" title="关于初始化RestTemplate的说明"></a>关于初始化RestTemplate的说明</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate();</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> HttpComponentsClientHttpRequestFactory());</span><br><span class="line">RestTemplate restTemplate = <span class="keyword">new</span> RestTemplate(<span class="keyword">new</span> OkHttp3ClientHttpRequestFactory());</span><br></pre></td></tr></table></figure>
-
-<p>实际上RestTemplate自己并不实现具体的http操作，其只是对已有类库进行了封装，而其具体实现仍然依赖底层的类库</p>
-<ol>
-<li>上面第一种初始化方法 其使用JDK自带的 HttpURLConnection</li>
-<li>第二种初始化方法 使用的是 HttpClient 库</li>
-<li>第三种初始化方法 使用的是 OkHttp 库</li>
-</ol>
-<p>所以如果对具体使用的类库有要求的话，应该在初始化时指定具体的工厂类，当然还需要添加相关的依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.httpcomponents&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;httpclient&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.5.3&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.squareup.okhttp3&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;okhttp&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.11.0&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
-
-
-
-<hr>
-<p>微信端的朋友也可关注我的公众号</p>
-<p><strong>小马向前走</strong></p>
-<p><img src="/2021/02/08/07-rest-template/qrcode-12cm.jpg" alt="qrcode-12cm"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1320,7 +1325,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1333,7 +1338,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
