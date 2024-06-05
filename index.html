@@ -162,7 +162,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/05/17-Graphviz/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/08/17-Graphviz/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,7 +176,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/06/05/17-Graphviz/" class="post-title-link" itemprop="url">使用Graphviz画树形结构示意图</a>
+            <a href="/2024/06/08/17-Graphviz/" class="post-title-link" itemprop="url">使用Graphviz画树形结构示意图</a>
         </h2>
 
         <div class="post-meta">
@@ -185,10 +185,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2024-06-05 21:52:16 / Modified: 17:10:37" itemprop="dateCreated datePublished" datetime="2024-06-05T21:52:16+08:00">2024-06-05</time>
+              <time title="Created: 2024-06-08 21:52:16" itemprop="dateCreated datePublished" datetime="2024-06-08T21:52:16+08:00">2024-06-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-06-05 17:15:17" itemprop="dateModified" datetime="2024-06-05T17:15:17+08:00">2024-06-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -215,19 +221,19 @@
 <p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
 <h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
 <h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
-<img src="/2024/06/05/17-Graphviz/OrgTree-preview.png" alt="OrgTree-preview" style="zoom:50%;">
+<img src="/2024/06/08/17-Graphviz/OrgTree-preview.png" alt="OrgTree-preview" style="zoom:50%;">
 
 
 
 <p>树形结构图对应的源码如下，可以看到只需要定义节点及节点之间的关系，不需要关心布局。</p>
-<p><img src="/2024/06/05/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
+<p><img src="/2024/06/08/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
 <h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
-<img src="/2024/06/05/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
+<img src="/2024/06/08/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
 
 
 
 <p>如下是对应的源码，这里箭头的指向为双向。</p>
-<p><img src="/2024/06/05/17-Graphviz/OrgMultiLineTree-codesnippet.png" alt="OrgMultiLineTree-codesnippet"></p>
+<p><img src="/2024/06/08/17-Graphviz/OrgMultiLineTree-codesnippet.png" alt="OrgMultiLineTree-codesnippet"></p>
 <h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p>前几节介绍了Graphviz以及使用它的原因， 并且展示了我用它画树形结构的实例，本节介绍一些具体的工具，方便大家入门。</p>
 <p><strong>推荐1 Graphviz 命令行工具</strong></p>
 <p>Graphviz其实是一个命令行工具，使用它之前需要先安装，不同的操作系统安装方式不同，具体可查看官网 <a target="_blank" rel="noopener" href="https://graphviz.org/">https://graphviz.org/</a></p>
@@ -247,19 +253,19 @@
 <li>Graphviz language support for visual studio code  </li>
 </ol>
 <p>提供语法高亮</p>
-<p><img src="/2024/06/05/17-Graphviz/vscode-Graphviz-language-support-for-visual-studio-code.png" alt="vscode-Graphviz-language-support-for-visual-studio-code"></p>
+<p><img src="/2024/06/08/17-Graphviz/vscode-Graphviz-language-support-for-visual-studio-code.png" alt="vscode-Graphviz-language-support-for-visual-studio-code"></p>
 <ol start="2">
 <li>Graphviz Preview</li>
 </ol>
 <p>可以快速预览或者导出graphviz文件，这样就不需要记忆具体的命令了。</p>
-<p><img src="/2024/06/05/17-Graphviz/vscode-Graphviz-Preview.png" alt="vscode-Graphviz-Preview"></p>
+<p><img src="/2024/06/08/17-Graphviz/vscode-Graphviz-Preview.png" alt="vscode-Graphviz-Preview"></p>
 <p><strong>推荐3 python接口</strong></p>
 <p>很多编程语言会集成 Graphviz 绘图工具，PyGraphviz是Graphviz的Python接口，允许开发者使用Python代码与Graphviz进行交互，实现图形的创建、布局、可视化和分析</p>
 <p>官网 <a target="_blank" rel="noopener" href="https://github.com/pygraphviz/pygraphviz">https://github.com/pygraphviz/pygraphviz</a></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过掌握基本的 DOT 语言和 Graphviz 工具，用户可以轻松创建和自定义自己的图形，满足常见的可视化需求。正所谓一图胜千言，不论是在学术研究、软件开发还是日常工作中，Graphviz 都能够提供极大的便利和帮助，赶快实践起来，体验它的强大功能吧！</p>
 <hr>
 <p>微信端的朋友也可关注我的公众号</p>
-<p><img src="/2024/06/05/17-Graphviz/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
+<p><img src="/2024/06/08/17-Graphviz/qrcode-wechat-web.jpg" alt="qrcode-12cm"></p>
 
       
     </div>
