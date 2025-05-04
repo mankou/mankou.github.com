@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="引言对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。 Graphviz简介Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室开">
+  <meta name="description" content="引言对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高。要深入理解和掌握树形结构，亲自绘制树形结构示意图是一种有效的方法，正所谓想要做到心中有“树”，需要自己动手实践。本文介绍一款高效的绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，同时文章还会推荐一些相关的工具，帮助读者更容易地入门。 Graphviz简介Graphviz ，是G">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Graphviz画树形结构示意图">
 <meta property="og:url" content="http://example.com/2024/06/08/17-Graphviz/index.html">
 <meta property="og:site_name" content="小马向前走">
-<meta property="og:description" content="引言对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。 Graphviz简介Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室开">
+<meta property="og:description" content="引言对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高。要深入理解和掌握树形结构，亲自绘制树形结构示意图是一种有效的方法，正所谓想要做到心中有“树”，需要自己动手实践。本文介绍一款高效的绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，同时文章还会推荐一些相关的工具，帮助读者更容易地入门。 Graphviz简介Graphviz ，是G">
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/2024/06/08/17-Graphviz/OrgTree-preview.png">
 <meta property="og:image" content="http://example.com/2024/06/08/17-Graphviz/OrgTree-codesnippet.png">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="http://example.com/2024/06/08/17-Graphviz/vscode-Graphviz-Preview.png">
 <meta property="og:image" content="http://example.com/2024/06/08/17-Graphviz/qrcode-wechat-web.jpg">
 <meta property="article:published_time" content="2024-06-08T13:52:16.000Z">
-<meta property="article:modified_time" content="2024-06-05T09:25:11.540Z">
+<meta property="article:modified_time" content="2024-12-18T08:49:00.000Z">
 <meta property="article:author" content="maning">
 <meta property="article:tag" content="Graphviz">
 <meta property="article:tag" content="工具">
@@ -205,7 +205,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-06-05 17:25:11" itemprop="dateModified" datetime="2024-06-05T17:25:11+08:00">2024-06-05</time>
+                <time title="Modified: 2024-12-18 16:49:00" itemprop="dateModified" datetime="2024-12-18T16:49:00+08:00">2024-12-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -228,9 +228,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。</p>
-<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室开发的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
-<p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高。要深入理解和掌握树形结构，亲自绘制树形结构示意图是一种有效的方法，正所谓想要做到心中有“树”，需要自己动手实践。本文介绍一款高效的绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，同时文章还会推荐一些相关的工具，帮助读者更容易地入门。</p>
+<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz ，是Graph Visualization Software的缩写，是由AT&amp;T实验室精心打造的开源工具包，它在生成各种图形表示方面应用广泛。Graphviz采用DOT语言描述图表，并通过布局引擎解析脚本，自动完成脚本的布局， 此外，它还支持多种丰富的导出格式，包括SVG和PDF等。</p>
+<p>我对Graphviz的喜爱源于其自动布局的特性，<strong>它真正实现了“Graph as code”的理念，即像编写代码一样绘制图形</strong>。Graphviz的强大之处在于其“所思即所得”（WYTIWYG，what you think is what you get）的工作方式，这与传统的“所见即所得”（WYSIWYG，what you see is what you get）工具截然不同。普通的所见即所得工具依赖于鼠标拖拽操作，而使用Graphviz时，我的主要职责是编写DOT脚本，只需关注图形中各元素之间的关系，无需分心于布局问题，这让我从排版的繁琐中解放出来。在日常开发工作中，这一点尤为重要，我们希望在构思代码的同时，能够专注于数据结构本身，快速根据我们的思路生成示意图，而不必时刻考虑排版问题。这样的工作方式让我们能够更加专注于工作本身，将注意力集中在问题的核心上。</p>
 <h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
 <h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
 <img src="/2024/06/08/17-Graphviz/OrgTree-preview.png" alt="OrgTree-preview" style="zoom:50%;">
@@ -239,7 +239,7 @@
 
 <p>树形结构图对应的源码如下，可以看到只需要定义节点及节点之间的关系，不需要关心布局。</p>
 <p><img src="/2024/06/08/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
-<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
+<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 下图是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
 <img src="/2024/06/08/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
 
 
@@ -252,7 +252,7 @@
 <ul>
 <li>如果是mac可通过<code>homebrew</code>或者<code>port</code>安装</li>
 <li>如果是windows可直接下载安装包</li>
-<li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code>，</li>
+<li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code></li>
 </ul>
 <p>如下是用Graphviz命令将dot源文件生成图片的命令示例</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dot -Tpng input.dot -o output.png</span><br></pre></td></tr></table></figure>
@@ -300,7 +300,10 @@
     <a href="/2024/02/02/16-shell-wait/" rel="prev" title="shell 并行运行程序技巧">
       <i class="fa fa-chevron-left"></i> shell 并行运行程序技巧
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/04/18-elasticdump/" rel="next" title="轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力">
+      轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -373,7 +376,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -386,7 +389,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -413,7 +416,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2024</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

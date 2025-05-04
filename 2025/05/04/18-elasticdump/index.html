@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="引言本文将介绍一款用于迁移 Elasticsearch 数据的实用工具 —— elasticdump。它专为在不同 Elasticsearch 实例之间导出和导入数据而设计，非常适合小规模的数据迁移、备份以及测试等场景。  elasticdump简介elasticdump 是一个命令行工具，主要用于将 Elasticsearch 的索引数据导出（dump）为 JSON 文件或从 JSON 文件导入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力">
+<meta property="og:url" content="http://example.com/2025/05/04/18-elasticdump/index.html">
+<meta property="og:site_name" content="小马向前走">
+<meta property="og:description" content="引言本文将介绍一款用于迁移 Elasticsearch 数据的实用工具 —— elasticdump。它专为在不同 Elasticsearch 实例之间导出和导入数据而设计，非常适合小规模的数据迁移、备份以及测试等场景。  elasticdump简介elasticdump 是一个命令行工具，主要用于将 Elasticsearch 的索引数据导出（dump）为 JSON 文件或从 JSON 文件导入">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2025/05/04/18-elasticdump/elasticdump.png">
+<meta property="article:published_time" content="2025-05-04T00:32:17.000Z">
+<meta property="article:modified_time" content="2025-05-04T12:28:04.115Z">
+<meta property="article:author" content="maning">
+<meta property="article:tag" content="elastic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/05/04/18-elasticdump/elasticdump.png">
+
+<link rel="canonical" href="http://example.com/2025/05/04/18-elasticdump/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'cn'
+  };
+</script>
+
+  <title>轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力 | 小马向前走</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">小马向前走</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/05/04/18-elasticdump/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-05-04 08:32:17 / Modified: 20:28:04" itemprop="dateCreated datePublished" datetime="2025-05-04T08:32:17+08:00">2025-05-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>本文将介绍一款用于迁移 Elasticsearch 数据的实用工具 —— <strong>elasticdump</strong>。它专为在不同 Elasticsearch 实例之间导出和导入数据而设计，非常适合小规模的数据迁移、备份以及测试等场景。</p>
+<p><img src="/2025/05/04/18-elasticdump/elasticdump.png" alt="elasticdump"></p>
+<h1 id="elasticdump简介"><a href="#elasticdump简介" class="headerlink" title="elasticdump简介"></a>elasticdump简介</h1><p><code>elasticdump</code> 是一个命令行工具，主要用于将 Elasticsearch 的索引数据导出（dump）为 JSON 文件或从 JSON 文件导入到 Elasticsearch。它支持迁移 Mapping（映射）、Data（数据）。</p>
+<p>GitHub 地址（官方文档）：<br><a target="_blank" rel="noopener" href="https://github.com/elasticsearch-dump/elasticsearch-dump">https://github.com/elasticsearch-dump/elasticsearch-dump</a></p>
+<h1 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h1><p><code>elasticdump</code> 是一个基于 Node.js 的命令行工具，因此在安装时需要使用 <code>npm</code> 命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install elasticdump -g</span><br></pre></td></tr></table></figure>
+
+<h1 id="具体使用"><a href="#具体使用" class="headerlink" title="具体使用"></a>具体使用</h1><p>本节将通过一个具体示例，演示如何从 <code>es1</code> 实例中导出数据，并将其导入到 <code>es2</code> 实例中。</p>
+<p>定义变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">es1_input=&quot;http://IP:PORT/index&quot;</span><br><span class="line">es2_output=&quot;http://IP:PORT/index&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤1-从-es1-实例导出数据"><a href="#步骤1-从-es1-实例导出数据" class="headerlink" title="步骤1: 从 es1 实例导出数据"></a>步骤1: 从 es1 实例导出数据</h2><p><strong>导出列类型</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; \</span><br><span class="line">  --output=./my_index_mapping.json \</span><br><span class="line">  --type=mapping</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong>在 Elasticsearch 中，导出”列类型”相当于导出数据库中的表结构。如果不迁移这些字段映射（mapping），Elasticsearch 会自动推断字段类型，这可能导致类型不准确，进而引发查询或索引异常。因此，<strong>建议在迁移数据时一并迁移字段映射</strong>，以确保数据结构的一致性。</p>
+<p><strong>导出数据</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; \</span><br><span class="line">  --output=./my_index.json \</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+<p>说明1: <strong>导出的数据是 jsonline 格式</strong>，一行一条，每条是一个 json 格式的数据。</p>
+<p>说明2: 上述命令适用于 Linux 或 macOS 系统，使用 <code>\</code> 作为续行符。<strong>如果你使用的是 Windows 操作系统，则在命令提示符（CMD）中执行命令时需要将续行符改为 <code>^</code></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump ^</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; ^</span><br><span class="line">  --output=my_index.json ^</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤2-将数据导入-es2-实例"><a href="#步骤2-将数据导入-es2-实例" class="headerlink" title="步骤2: 将数据导入 es2 实例"></a>步骤2: 将数据导入 es2 实例</h2><p><strong>导入列类型</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=my_index_mapping.json \</span><br><span class="line">  --output=&quot;$&#123;es2_output&#125;&quot; \</span><br><span class="line">  --type=mapping</span><br></pre></td></tr></table></figure>
+
+<p>细心的读者可能已经注意到，这里的 input 和 output 与步骤1中正好相反：此处的 input 是本地的 JSON 文件，而 output 则是 Elasticsearch 实例。</p>
+<p><strong>导入数据</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=my_index.json \</span><br><span class="line">  --output=&quot;$&#123;es2_output&#125;&quot; \</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>Elasticdump</strong> 是一款简单却功能强大的 Elasticsearch 数据迁移工具。通过几条简洁的命令，就可以轻松实现对 Elasticsearch 数据的导出与导入。无论是数据迁移、备份，还是测试，它都能成为你的得力助手。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/elastic/" rel="tag"># elastic</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/06/08/17-Graphviz/" rel="prev" title="使用Graphviz画树形结构示意图">
+      <i class="fa fa-chevron-left"></i> 使用Graphviz画树形结构示意图
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#elasticdump%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">elasticdump简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">安装方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">具体使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A41-%E4%BB%8E-es1-%E5%AE%9E%E4%BE%8B%E5%AF%BC%E5%87%BA%E6%95%B0%E6%8D%AE"><span class="nav-number">4.1.</span> <span class="nav-text">步骤1: 从 es1 实例导出数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A42-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5-es2-%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.2.</span> <span class="nav-text">步骤2: 将数据导入 es2 实例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">maning</p>
+  <div class="site-description" itemprop="description">小马向前走</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">maning</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

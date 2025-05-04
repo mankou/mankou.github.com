@@ -162,6 +162,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/05/04/18-elasticdump/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="maning">
+      <meta itemprop="description" content="小马向前走">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="小马向前走">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/05/04/18-elasticdump/" class="post-title-link" itemprop="url">轻松搞定 Elasticsearch 迁移：Elasticdump 助你一臂之力</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-05-04 08:32:17 / Modified: 20:28:04" itemprop="dateCreated datePublished" datetime="2025-05-04T08:32:17+08:00">2025-05-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>本文将介绍一款用于迁移 Elasticsearch 数据的实用工具 —— <strong>elasticdump</strong>。它专为在不同 Elasticsearch 实例之间导出和导入数据而设计，非常适合小规模的数据迁移、备份以及测试等场景。</p>
+<p><img src="/2025/05/04/18-elasticdump/elasticdump.png" alt="elasticdump"></p>
+<h1 id="elasticdump简介"><a href="#elasticdump简介" class="headerlink" title="elasticdump简介"></a>elasticdump简介</h1><p><code>elasticdump</code> 是一个命令行工具，主要用于将 Elasticsearch 的索引数据导出（dump）为 JSON 文件或从 JSON 文件导入到 Elasticsearch。它支持迁移 Mapping（映射）、Data（数据）。</p>
+<p>GitHub 地址（官方文档）：<br><a target="_blank" rel="noopener" href="https://github.com/elasticsearch-dump/elasticsearch-dump">https://github.com/elasticsearch-dump/elasticsearch-dump</a></p>
+<h1 id="安装方法"><a href="#安装方法" class="headerlink" title="安装方法"></a>安装方法</h1><p><code>elasticdump</code> 是一个基于 Node.js 的命令行工具，因此在安装时需要使用 <code>npm</code> 命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install elasticdump -g</span><br></pre></td></tr></table></figure>
+
+<h1 id="具体使用"><a href="#具体使用" class="headerlink" title="具体使用"></a>具体使用</h1><p>本节将通过一个具体示例，演示如何从 <code>es1</code> 实例中导出数据，并将其导入到 <code>es2</code> 实例中。</p>
+<p>定义变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">es1_input=&quot;http://IP:PORT/index&quot;</span><br><span class="line">es2_output=&quot;http://IP:PORT/index&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤1-从-es1-实例导出数据"><a href="#步骤1-从-es1-实例导出数据" class="headerlink" title="步骤1: 从 es1 实例导出数据"></a>步骤1: 从 es1 实例导出数据</h2><p><strong>导出列类型</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; \</span><br><span class="line">  --output=./my_index_mapping.json \</span><br><span class="line">  --type=mapping</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong>在 Elasticsearch 中，导出”列类型”相当于导出数据库中的表结构。如果不迁移这些字段映射（mapping），Elasticsearch 会自动推断字段类型，这可能导致类型不准确，进而引发查询或索引异常。因此，<strong>建议在迁移数据时一并迁移字段映射</strong>，以确保数据结构的一致性。</p>
+<p><strong>导出数据</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; \</span><br><span class="line">  --output=./my_index.json \</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+<p>说明1: <strong>导出的数据是 jsonline 格式</strong>，一行一条，每条是一个 json 格式的数据。</p>
+<p>说明2: 上述命令适用于 Linux 或 macOS 系统，使用 <code>\</code> 作为续行符。<strong>如果你使用的是 Windows 操作系统，则在命令提示符（CMD）中执行命令时需要将续行符改为 <code>^</code></strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump ^</span><br><span class="line">  --input=&quot;$&#123;es1_input&#125;&quot; ^</span><br><span class="line">  --output=my_index.json ^</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+<h2 id="步骤2-将数据导入-es2-实例"><a href="#步骤2-将数据导入-es2-实例" class="headerlink" title="步骤2: 将数据导入 es2 实例"></a>步骤2: 将数据导入 es2 实例</h2><p><strong>导入列类型</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=my_index_mapping.json \</span><br><span class="line">  --output=&quot;$&#123;es2_output&#125;&quot; \</span><br><span class="line">  --type=mapping</span><br></pre></td></tr></table></figure>
+
+<p>细心的读者可能已经注意到，这里的 input 和 output 与步骤1中正好相反：此处的 input 是本地的 JSON 文件，而 output 则是 Elasticsearch 实例。</p>
+<p><strong>导入数据</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">elasticdump \</span><br><span class="line">  --input=my_index.json \</span><br><span class="line">  --output=&quot;$&#123;es2_output&#125;&quot; \</span><br><span class="line">  --type=data</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>Elasticdump</strong> 是一款简单却功能强大的 Elasticsearch 数据迁移工具。通过几条简洁的命令，就可以轻松实现对 Elasticsearch 数据的导出与导入。无论是数据迁移、备份，还是测试，它都能成为你的得力助手。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/06/08/17-Graphviz/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -193,7 +283,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-06-05 17:25:11" itemprop="dateModified" datetime="2024-06-05T17:25:11+08:00">2024-06-05</time>
+                <time title="Modified: 2024-12-18 16:49:00" itemprop="dateModified" datetime="2024-12-18T16:49:00+08:00">2024-12-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,9 +306,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高，想要做到心中有“树”，需要自己动手画图，本文介绍一款快速绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，最后推荐一些相关的软件方便读者入门。</p>
-<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz （Graph Visualization Software的缩写）是一个由AT&amp;T实验室开发的开源工具包，用于绘制DOT语言脚本描述的图形， 广泛用于生成各种图形表示。它使用一门名为DOT的语言来描述图表，然后使用布局引擎解析此脚本完成自动布局， 并且提供了丰富的导出格式，如SVG，PDF 等。</p>
-<p>我之所以喜欢Graphviz，是因为其能自动布局，<strong>真正做到了Graph as code， 即像写代码一样画图</strong>。其强大主要体现在“所思即所得“（WYTIWYG，what you think is what you get），这和一般的“所见即所得“（WYSIWYG，what you see is what you get）的方式完全不同， 一般的“所见即所得“的普通画图工具主要使用鼠标拖拽， 而用Graphviz绘图的时候，我的主要工作就是编写dot脚本，只需要关注图中各个点之间的关系，不需要考虑布局，将我从排版中解放出来。这在日常开发工作中很重要，我们希望在构思代码的过程中， 专心考虑数据结构本身，能够根据我们的思路快速生成一张示意图，而不需要时刻考虑排版问题，这样能让我们专心做事，把注意力聚焦到问题本身。</p>
+          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>对于开发人员来说树形结构是一种非线性结构，与数组、栈、队列等线性结构相比，复杂度更高。要深入理解和掌握树形结构，亲自绘制树形结构示意图是一种有效的方法，正所谓想要做到心中有“树”，需要自己动手实践。本文介绍一款高效的绘图工具Graphviz，并演示2个使用 Graphviz 绘制树形结构的例子，同时文章还会推荐一些相关的工具，帮助读者更容易地入门。</p>
+<h1 id="Graphviz简介"><a href="#Graphviz简介" class="headerlink" title="Graphviz简介"></a>Graphviz简介</h1><p>Graphviz ，是Graph Visualization Software的缩写，是由AT&amp;T实验室精心打造的开源工具包，它在生成各种图形表示方面应用广泛。Graphviz采用DOT语言描述图表，并通过布局引擎解析脚本，自动完成脚本的布局， 此外，它还支持多种丰富的导出格式，包括SVG和PDF等。</p>
+<p>我对Graphviz的喜爱源于其自动布局的特性，<strong>它真正实现了“Graph as code”的理念，即像编写代码一样绘制图形</strong>。Graphviz的强大之处在于其“所思即所得”（WYTIWYG，what you think is what you get）的工作方式，这与传统的“所见即所得”（WYSIWYG，what you see is what you get）工具截然不同。普通的所见即所得工具依赖于鼠标拖拽操作，而使用Graphviz时，我的主要职责是编写DOT脚本，只需关注图形中各元素之间的关系，无需分心于布局问题，这让我从排版的繁琐中解放出来。在日常开发工作中，这一点尤为重要，我们希望在构思代码的同时，能够专注于数据结构本身，快速根据我们的思路生成示意图，而不必时刻考虑排版问题。这样的工作方式让我们能够更加专注于工作本身，将注意力集中在问题的核心上。</p>
 <h1 id="我的实践"><a href="#我的实践" class="headerlink" title="我的实践"></a>我的实践</h1><p>本节演示2个用Graphviz画树形结构的例子，让大家对Graphviz先有个直观的认识。</p>
 <h2 id="实践1-树形结构示意图"><a href="#实践1-树形结构示意图" class="headerlink" title="实践1 树形结构示意图"></a>实践1 树形结构示意图</h2><p>我接到了一个关于树形结构的开发任务，需要将数据按照省，市，区县的结构组织成树形结构， 借助Grapihviz可以很方便的绘制一个树形结构示意图，方便开发者沟通交流，效果图如下。</p>
 <img src="/2024/06/08/17-Graphviz/OrgTree-preview.png" alt="OrgTree-preview" style="zoom:50%;">
@@ -227,7 +317,7 @@
 
 <p>树形结构图对应的源码如下，可以看到只需要定义节点及节点之间的关系，不需要关心布局。</p>
 <p><img src="/2024/06/08/17-Graphviz/OrgTree-codesnippet.png" alt="OrgTree-codesnippet"></p>
-<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 如下是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
+<h2 id="实践2-双向链接树形结构示意图"><a href="#实践2-双向链接树形结构示意图" class="headerlink" title="实践2 双向链接树形结构示意图"></a>实践2 双向链接树形结构示意图</h2><p>一般的树形结构从父节点可以找到子节点，但是从子节点找不到父节点，我需要构造一个双向链接的树形结构，也即从子节点也可以找到父节点，例如我想知道市辖区属于哪个地市，则需要通过子节点不断向上遍历直到找到合适的父节点。 下图是用Graphivz绘制的示意图，可以看到父子节点之间的箭头是双向的。</p>
 <img src="/2024/06/08/17-Graphviz/OrgMultiLinkTree-preview.png" alt="OrgMultiLinkTree-preview" style="zoom:50%;">
 
 
@@ -240,7 +330,7 @@
 <ul>
 <li>如果是mac可通过<code>homebrew</code>或者<code>port</code>安装</li>
 <li>如果是windows可直接下载安装包</li>
-<li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code>，</li>
+<li>如果是linux根据不同的发行版用不同的包管理软件安装 如<code>apt</code>，<code>yum</code></li>
 </ul>
 <p>如下是用Graphviz命令将dot源文件生成图片的命令示例</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dot -Tpng input.dot -o output.png</span><br></pre></td></tr></table></figure>
@@ -1128,140 +1218,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="cn">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/12/08-restclient/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="maning">
-      <meta itemprop="description" content="小马向前走">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="小马向前走">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/12/08-restclient/" class="post-title-link" itemprop="url">REST Client 插件的使用</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-12 12:08:33" itemprop="dateCreated datePublished" datetime="2021-07-12T12:08:33+08:00">2021-07-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-02-24 17:33:24" itemprop="dateModified" datetime="2022-02-24T17:33:24+08:00">2022-02-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>REST Client 是一个 VSCode 插件，使我们可以直接在 VSCode 中直接发送http请求，目前我用它来代替 postman 做一些简单接口测试。</p>
-<p>REST Client allows you to send HTTP request and view the response in Visual Studio Code directly</p>
-<p><img src="/2021/07/12/08-restclient/restClient-28456.png" alt="restClient-1"></p>
-<p>说起测试接口，大家一定会想起 postman ，那在引入 REST Client 插件之前，需要解答一个问题，难道 postman 不香么，为什么还要引入新工具? 实际上 postman 很香，只是对于一些入参简单的请求，用 postman 感觉太重了，而且如果接口数量很多，导致打开很多标签。</p>
-<p><strong>一直以来我也在寻找更好的方案，一个不用切换窗口的方案</strong>  – 终于在使用 VSCode 一段时间后，我找到了 REST Client 插件，初看 REST Client 插件的时候，会觉得他十分简陋，但是在使用一段时间后会发现在 REST Client 插件中已经有完成接口测试所需的大部分功能。</p>
-<p><strong>我总结了3点使用REST Client插件的好处</strong></p>
-<ol>
-<li>便于分享，因为是纯文本，联调时可以做为一个成果物，发给前端开发同事做为测试列表，这是我使用它的主要原因</li>
-<li>不用切换标签，通过###分隔符，同一个HTTP文件里可以包含多个HTTP请求， 不像Postman，不同的HTTP请求需要放在不同的tab里</li>
-<li>可以更直接的接触到http的相关知识，因为不论请求还是返回都是文本，这样可以更直接的感受到http请求的细节</li>
-</ol>
-<h1 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h1><p>github </p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Huachao/vscode-restclient">https://github.com/Huachao/vscode-restclient</a></p>
-<h1 id="关于安装"><a href="#关于安装" class="headerlink" title="关于安装"></a>关于安装</h1><p>直接在插件商店中搜索 REST Client 安装即可</p>
-<p><img src="/2021/07/12/08-restclient/restClient-13246.png" alt="restClient-13246"></p>
-<h1 id="简单使用"><a href="#简单使用" class="headerlink" title="简单使用"></a>简单使用</h1><p>本节列出几个示例，指引大家快速入门</p>
-<h2 id="示例1-get请求示例"><a href="#示例1-get请求示例" class="headerlink" title="示例1 get请求示例"></a>示例1 get请求示例</h2><p>这里演示如何发送一个get请求，从该示例中你会掌握基本的用法</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
-
-<p>当一个文件的后缀名是.http 或者 .rest时，VSCode 会自动识别成接口文件</p>
-<p>在VSCode中 <strong>用三个#号 ### 表示一个接口的开始</strong>，其下方会有一个 Send Request的按钮，当点击该按钮时会发送请求，之后会在窗口右边显示请求返回的内容</p>
-<p><img src="/2021/07/12/08-restclient/restClient-26417.png" alt="restClient-26417"></p>
-<h2 id="示例2-post请求示例"><a href="#示例2-post请求示例" class="headerlink" title="示例2 post请求示例"></a>示例2 post请求示例</h2><p>这里演示如何发送一个post请求</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### post 请求示例</span><br><span class="line">POST &#123;&#123;IP&#125;&#125;/authorize/register</span><br><span class="line"><span class="attribute">Content-Type</span>: application/json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;: &quot;小天&quot;，</span><br><span class="line">    &quot;username&quot;: &quot;sky&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意data 与请求头之间有空行</strong></p>
-<h1 id="高阶使用"><a href="#高阶使用" class="headerlink" title="高阶使用"></a>高阶使用</h1><p>其实REST Client还有很多的功能，有需求的同学可以慢慢挖掘，笔者列出了一些比较有用的高阶技巧。</p>
-<h2 id="示例1-变量的使用"><a href="#示例1-变量的使用" class="headerlink" title="示例1 变量的使用"></a>示例1 变量的使用</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@IP=127.0.0.1:8083</span><br><span class="line"></span><br><span class="line">### get 请求示例</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testParam?name=hello</span><br></pre></td></tr></table></figure>
-
-<p>实际上细心的你可能已经发现，在前面的简单示例中IP并没有写死，而是使用了一个变量，这样做的好处是可以快速切换环境。</p>
-<p>当然这里的变量可以不光是变量，还可以是环境变量，其在使用方式上没有差别。</p>
-<h2 id="示例2-Get请求参数写成多行"><a href="#示例2-Get请求参数写成多行" class="headerlink" title="示例2 Get请求参数写成多行"></a>示例2 Get请求参数写成多行</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">### get 请求 参数写到多行示例</span><br><span class="line">GET https://example.com/comments</span><br><span class="line">    ?page=2</span><br><span class="line">    &amp;pageSize=10</span><br></pre></td></tr></table></figure>
-
-<p>如果参数有很多，写在一行上不方便阅读和修改，则可以像这里一样分行写，一行一个。</p>
-<h2 id="示例3-添加头信息"><a href="#示例3-添加头信息" class="headerlink" title="示例3 添加头信息"></a>示例3 添加头信息</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 测试 不拦截 请求头中加标记</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testMap</span><br><span class="line"><span class="attribute">XX-NOT-INTERCEPT:true</span></span><br></pre></td></tr></table></figure>
-
-<p>如果需要添加自定义的头信息可以这样添加。</p>
-<h2 id="示例4-添加cookie"><a href="#示例4-添加cookie" class="headerlink" title="示例4 添加cookie"></a>示例4 添加cookie</h2><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 测试 cookie</span><br><span class="line">GET http://&#123;&#123;IP&#125;&#125;/pgp/helloJson/testCookie</span><br><span class="line"><span class="attribute">Cookie</span>: eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIxNjI2MTA1NjAwIiwic3ViIjoic2t5Iiwib2ZmaWNpYWxBY2NvdW50cyI6IuWwj-mprOWQkeWJjei1sCIsImlhdCI6MTYyNjE3MTcwMywiZXhwIjoxNjI2MTcyMjAzfQ.PTzL-lw6NQb2qhQg_-q2DWmMOe-1IcpEWcKyLv2rQfQhnrJiIEnVEd0s4FKxre5qVkyfc9b40u31dvJS-ejYUg</span><br></pre></td></tr></table></figure>
-
-<p>这里演示在请求中如何添加cookie， 实际上cookie也是头的一部分，和添加头没什么区别。</p>
-<h2 id="示例5-代码生成"><a href="#示例5-代码生成" class="headerlink" title="示例5 代码生成"></a>示例5 代码生成</h2><p>代码生成也是REST Client里一个很方便的功能，可以方便的将HTTP请求生成代码片段或者curl命令。</p>
-<p><strong>Generate Code Snippet</strong></p>
-<p>你可以方便地通过 Generate Code Snippet 命令来把HTTP请求生成出不同编程语言的代码：JavaScript， Python， C， C#， Java， PHP， Go， Ruby， Swift等等主流语言。</p>
-<p><img src="/2021/07/12/08-restclient/restClient-21529.gif" alt="restClient-21529"></p>
-<p><strong>Copy Request As cURL</strong></p>
-<p>也可以通过Copy Request As cURL功能将HTTP请求生成 <code>curl</code> 命令，这个方法在运维排错时特别有用，在运维时有可能网络不通，需要登录到内网机器执行curl命令测试接口是否正常，但也许你对curl命令不熟悉， 不能很快写出命令，则可以借助REST Client 直接生成curl命令。</p>
-<p><img src="/2021/07/12/08-restclient/restClient-128.png" alt="restClient-128"></p>
-<p>选中接口文本–&gt; 右键 Copy Request As cURL</p>
-<p><img src="/2021/07/12/08-restclient/restClient-25289.png" alt="restClient-25289"></p>
-<p>如下是生成的curl命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl --request POST \</span><br><span class="line">  --url <span class="string">&#x27;http://127.0.0.1:8083/blue/sql/queryListByKeyWithParam?key=00_0005&#x27;</span> \</span><br><span class="line">  --header <span class="string">&#x27;content-type: application/json&#x27;</span> \</span><br><span class="line">  --header <span class="string">&#x27;user-agent: vscode-restclient&#x27;</span> \</span><br><span class="line">  --data <span class="string">&#x27;&#123;&quot;dataType&quot;:&quot;default&quot;,&quot;code&quot;:[&quot;001&quot;,&quot;002&quot;]&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本节演示了REST Client的一些用法，希望大家把 VSCode 转化为一个 REST 接口测试的利器。</p>
-<hr>
-<p>微信端的朋友也可关注我的公众号</p>
-<p><strong>小马向前走</strong></p>
-<p><img src="/2021/07/12/08-restclient/qrcode-12cm.jpg" alt="qrcode-12cm"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1331,7 +1287,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1344,7 +1300,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1371,7 +1327,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2024</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
