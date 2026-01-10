@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2026-01-10 15:47:44" itemprop="dateModified" datetime="2026-01-10T15:47:44+08:00">2026-01-10</time>
+                <time title="Modified: 2026-01-10 15:55:20" itemprop="dateModified" datetime="2026-01-10T15:55:20+08:00">2026-01-10</time>
               </span>
 
           
@@ -207,15 +207,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-引言：Git-命令行里的小烦恼"><a href="#1-引言：Git-命令行里的小烦恼" class="headerlink" title="1. 引言：Git 命令行里的小烦恼"></a>1. 引言：Git 命令行里的小烦恼</h1><p>大多数人使用 Git，都是在 IDE 里完成的，而我偏偏喜欢在命令行里敲命令，通过命令行可以更深刻地理解 Git 的操作逻辑，但随着时间久了，我也不得不承认：Git 的命令和参数实在太多、太难记。每次切分支、合并、提交都要手动输入一长串命令。</p>
+          <h1 id="引言：Git-命令行里的小烦恼"><a href="#引言：Git-命令行里的小烦恼" class="headerlink" title="引言：Git 命令行里的小烦恼"></a>引言：Git 命令行里的小烦恼</h1><p>大多数人使用 Git，都是在 IDE 里完成的，而我偏偏喜欢在命令行里敲命令，通过命令行可以更深刻地理解 Git 的操作逻辑，但随着时间久了，我也不得不承认：Git 的命令和参数实在太多、太难记。每次切分支、合并、提交都要手动输入一长串命令。</p>
 <p>所以我一直在寻找，看看有没有一种方式，<strong>既保留命令行的纯粹，又能简化 Git 命令的繁琐</strong>。一个偶然的机会，我发现了一个恰到好处的插件——<strong>Oh My Zsh 的 Git 插件</strong>。那一刻的感觉，简直就是<strong>相见恨晚</strong>。</p>
-<h1 id="2-Zsh-的隐藏宝藏：你不知道的效率神器"><a href="#2-Zsh-的隐藏宝藏：你不知道的效率神器" class="headerlink" title="2. Zsh 的隐藏宝藏：你不知道的效率神器"></a>2. Zsh 的隐藏宝藏：你不知道的效率神器</h1><p>用过 Mac 的朋友都知道，系统默认的shell是 <code>zsh</code>，而 Oh My Zsh 是一个让 <code>zsh</code> 更强大的配置框架。它内置了很多高效插件，其中最让我惊喜的就是——<code>git</code> 插件。启用后，原本冗长的 Git 命令，立刻变得<strong>简洁、优雅、高效</strong>。</p>
+<h1 id="Zsh-的隐藏宝藏：你不知道的效率神器"><a href="#Zsh-的隐藏宝藏：你不知道的效率神器" class="headerlink" title="Zsh 的隐藏宝藏：你不知道的效率神器"></a>Zsh 的隐藏宝藏：你不知道的效率神器</h1><p>用过 Mac 的朋友都知道，系统默认的shell是 <code>zsh</code>，而 Oh My Zsh 是一个让 <code>zsh</code> 更强大的配置框架。它内置了很多高效插件，其中最让我惊喜的就是——<code>git</code> 插件。启用后，原本冗长的 Git 命令，立刻变得<strong>简洁、优雅、高效</strong>。</p>
 <p>更妙的是，这个插件是 <strong>Oh My Zsh 自带</strong> 的，无需额外安装。你只需要在 <code>.zshrc</code> 文件中添加一行配置即可启用：</p>
 <figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plugins=(... git)</span><br></pre></td></tr></table></figure>
 
 
 
-<h1 id="3-一行命令的魔法：别名让-Git-更顺手"><a href="#3-一行命令的魔法：别名让-Git-更顺手" class="headerlink" title="3. 一行命令的魔法：别名让 Git 更顺手"></a>3. 一行命令的魔法：别名让 Git 更顺手</h1><p>Oh My Zsh 的 Git 插件，其实是一个集合了上百条别名（alias）的配置。<br>它把常见的 Git 命令浓缩成简短易记的缩写，让命令行使用变得轻盈又顺手。</p>
+<h1 id="一行命令的魔法：别名让-Git-更顺手"><a href="#一行命令的魔法：别名让-Git-更顺手" class="headerlink" title="一行命令的魔法：别名让 Git 更顺手"></a>一行命令的魔法：别名让 Git 更顺手</h1><p>Oh My Zsh 的 Git 插件，其实是一个集合了上百条别名（alias）的配置。<br>它把常见的 Git 命令浓缩成简短易记的缩写，让命令行使用变得轻盈又顺手。</p>
 <p>github地址：<a target="_blank" rel="noopener" href="https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git">https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git</a></p>
 <p><img src="/2025/11/09/19-git-plugin/gitPlugin.png" alt="gitPlugin"></p>
 <p>下面是我最常用的一些命令缩写：</p>
@@ -283,7 +283,7 @@
 <td>合并</td>
 </tr>
 </tbody></table>
-<h1 id="4-写在最后：简单就在身边"><a href="#4-写在最后：简单就在身边" class="headerlink" title="4. 写在最后：简单就在身边"></a>4. 写在最后：简单就在身边</h1><p>回想起来，我曾经在各种效率工具、终端主题之间反复折腾，想找到那个能让我“更高效”的完美方案。结果发现，<strong>好用的工具其实就在身边，而我却一直在寻找</strong>！Oh My Zsh 的 Git 插件就像那个被忽略的老朋友，安静地待在 plugins 目录里，直到有一天我真正启用了它，蓦然回首感慨万千。其实，没必要挑来挑去，用好身边的工具，先把事干起来，才是正道。</p>
+<h1 id="写在最后：简单就在身边"><a href="#写在最后：简单就在身边" class="headerlink" title="写在最后：简单就在身边"></a>写在最后：简单就在身边</h1><p>回想起来，我曾经在各种效率工具、终端主题之间反复折腾，想找到那个能让我“更高效”的完美方案。结果发现，<strong>好用的工具其实就在身边，而我却一直在寻找</strong>！Oh My Zsh 的 Git 插件就像那个被忽略的老朋友，安静地待在 plugins 目录里，直到有一天我真正启用了它，蓦然回首感慨万千。其实，没必要挑来挑去，用好身边的工具，先把事干起来，才是正道。</p>
 <p><strong>如果你用 Mac、用 zsh、也用 Git——那我真心建议你试试这个插件！</strong></p>
 
       
